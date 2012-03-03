@@ -6,9 +6,10 @@ import opennbt.NBTUtils;
 
 
 /*
- * JNBT License
+ * OpenNBT License
  * 
- * Copyright (c) 2010 Graham Edgecombe
+ * JNBT Copyright (c) 2010 Graham Edgecombe
+ * OpenNBT Copyright(c) 2012 Steveice10
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -21,7 +22,7 @@ import opennbt.NBTUtils;
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
  *       
- *     * Neither the name of the JNBT team nor the names of its
+ *     * Neither the name of the OpenNBT team nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  * 
@@ -40,8 +41,6 @@ import opennbt.NBTUtils;
 
 /**
  * The <code>TAG_Byte_Array</code> tag.
- * @author Graham Edgecombe
- *
  */
 public final class ByteArrayTag extends Tag {
 	

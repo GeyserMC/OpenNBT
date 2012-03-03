@@ -1,9 +1,10 @@
 package opennbt.stream;
 
 /*
- * JNBT License
+ * OpenNBT License
  * 
- * Copyright (c) 2010 Graham Edgecombe
+ * JNBT Copyright (c) 2010 Graham Edgecombe
+ * OpenNBT Copyright(c) 2012 Steveice10
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -16,7 +17,7 @@ package opennbt.stream;
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
  *       
- *     * Neither the name of the JNBT team nor the names of its
+ *     * Neither the name of the OpenNBT team nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  * 
@@ -67,8 +68,6 @@ import opennbt.tag.Tag;
  * <p>The NBT format was created by Markus Persson, and the specification may
  * be found at <a href="http://www.minecraft.net/docs/NBT.txt">
  * http://www.minecraft.net/docs/NBT.txt</a>.</p>
- * @author Graham Edgecombe
- *
  */
 public final class NBTInputStream implements Closeable {
 	

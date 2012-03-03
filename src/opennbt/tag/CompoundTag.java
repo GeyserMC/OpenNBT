@@ -1,9 +1,10 @@
 package opennbt.tag;
 
 /*
- * JNBT License
+ * OpenNBT License
  * 
- * Copyright (c) 2010 Graham Edgecombe
+ * JNBT Copyright (c) 2010 Graham Edgecombe
+ * OpenNBT Copyright(c) 2012 Steveice10
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -41,8 +42,6 @@ import opennbt.NBTUtils;
 
 /**
  * The <code>TAG_Compound</code> tag.
- * @author Graham Edgecombe
- *
  */
 public final class CompoundTag extends Tag {
 	
