@@ -92,7 +92,7 @@ public final class ByteArrayTag extends Tag {
 	}
 	
 	public Tag clone() {
-		byte[] clonedArray = NBTUtils.cloneArray(this.getValue());
+		byte[] clonedArray = NBTUtils.cloneByteArray(this.getValue());
 		
 		return new ByteArrayTag(this.getName(), clonedArray);
 	}

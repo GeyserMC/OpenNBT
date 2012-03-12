@@ -4,12 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.sun.media.sound.InvalidFormatException;
+
 import opennbt.tag.ByteArrayTag;
 import opennbt.tag.ByteTag;
 import opennbt.tag.CompoundTag;
 import opennbt.tag.DoubleTag;
 import opennbt.tag.EndTag;
 import opennbt.tag.FloatTag;
+import opennbt.tag.IntArrayTag;
 import opennbt.tag.IntTag;
 import opennbt.tag.ListTag;
 import opennbt.tag.LongTag;
@@ -85,6 +88,8 @@ public final class NBTUtils {
 			return "TAG_Short";
 		} else if(clazz.equals(StringTag.class)) {
 			return "TAG_String";
+		} else if (clazz.equals(IntArrayTag.class)) {
+			return "TAG_Int_Array";
 		} else {
 			throw new IllegalArgumentException("Invalid tag classs (" + clazz.getName() + ").");
 		}
@@ -119,6 +124,8 @@ public final class NBTUtils {
 			return NBTConstants.TYPE_SHORT;
 		} else if(clazz.equals(StringTag.class)) {
 			return NBTConstants.TYPE_STRING;
+		} else if(clazz.equals(IntArrayTag.class)) {
+			return NBTConstants.TYPE_INT_ARRAY;
 		} else {
 			throw new IllegalArgumentException("Invalid tag classs (" + clazz.getName() + ").");
 		}
@@ -154,6 +161,8 @@ public final class NBTUtils {
 			return ListTag.class;
 		case NBTConstants.TYPE_COMPOUND:
 			return CompoundTag.class;
+		case NBTConstants.TYPE_INT_ARRAY:
+			return IntArrayTag.class;
 		default:
 			throw new IllegalArgumentException("Invalid tag type : " + type + ".");
 		}
@@ -179,7 +188,7 @@ public final class NBTUtils {
 	 * @param array to clone
 	 * @return clone of array
 	 */
-	public static byte[] cloneArray(byte[] array) {
+	public static byte[] cloneByteArray(byte[] array) {
 		if(array == null) {
 			return null;
 		} else {
@@ -191,6 +200,47 @@ public final class NBTUtils {
 			return newArray;
 		}
 	}
+	
+	/**
+	 * Clones an int array
+	 * @param array to clone
+	 * @return clone of array
+	 */
+	public static int[] cloneIntArray(int[] array) {
+		if(array == null) {
+			return null;
+		} else {
+			int size = array.length;
+			
+			int[] newArray = new int[size];
+			System.arraycopy(array, 0, newArray, 0, size);
+			
+			return newArray;
+		}
+	}
+	
+    /**
+     * Get child tag of a NBT structure.
+     *
+     * @param items
+     * @param key
+     * @param expected
+     * @return child tag
+     * @throws InvalidFormatException
+     */
+    public static <T extends Tag> T getChildTag(Map<String,Tag> items, String key, Class<T> expected) throws InvalidFormatException {
+        if (!items.containsKey(key)) {
+            throw new InvalidFormatException("Missing a \"" + key + "\" tag");
+        }
+        
+        Tag tag = items.get(key);
+        
+        if (!expected.isInstance(tag)) {
+            throw new InvalidFormatException(key + " tag is not of tag type " + expected.getName());
+        }
+        
+        return expected.cast(tag);
+    }
 	
 	/**
 	 * Default private constructor.

@@ -52,6 +52,7 @@ import opennbt.tag.CompoundTag;
 import opennbt.tag.DoubleTag;
 import opennbt.tag.EndTag;
 import opennbt.tag.FloatTag;
+import opennbt.tag.IntArrayTag;
 import opennbt.tag.IntTag;
 import opennbt.tag.ListTag;
 import opennbt.tag.LongTag;
@@ -188,6 +189,15 @@ public final class NBTInputStream implements Closeable {
 			}
 			
 			return new CompoundTag(name, tagMap);
+        case NBTConstants.TYPE_INT_ARRAY:
+            length = is.readInt();
+            int[] data = new int[length];
+            
+            for (int i = 0; i < length; i++) {
+                data[i] = is.readInt();
+            }
+            
+            return new IntArrayTag(name, data);
 		default:
 			throw new IOException("Invalid tag type: " + type + ".");
 		}
