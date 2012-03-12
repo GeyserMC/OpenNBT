@@ -1,4 +1,10 @@
-package opennbt.tag;
+package me.steveice10.opennbt.tag;
+
+import java.util.Arrays;
+
+import me.steveice10.opennbt.NBTUtils;
+
+
 
 /*
  * OpenNBT License
@@ -17,7 +23,7 @@ package opennbt.tag;
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
  *       
- *     * Neither the name of the JNBT team nor the names of its
+ *     * Neither the name of the OpenNBT team nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  * 
@@ -35,42 +41,61 @@ package opennbt.tag;
  */
 
 /**
- * The <code>TAG_Float</code> tag.
+ * The <code>TAG_Byte_Array</code> tag.
  */
-public final class FloatTag extends Tag {
-
+public final class ByteArrayTag extends Tag {
+	
 	/**
 	 * The value.
 	 */
-	private final float value;
+	private final byte[] value;
 	
 	/**
 	 * Creates the tag.
 	 * @param name The name.
 	 * @param value The value.
 	 */
-	public FloatTag(String name, float value) {
+	public ByteArrayTag(String name, byte[] value) {
 		super(name);
 		this.value = value;
 	}
 	
 	@Override
-	public Float getValue() {
+	public byte[] getValue() {
 		return value;
 	}
 	
 	@Override
 	public String toString() {
+		StringBuilder hex = new StringBuilder();
+		for(byte b : value) {
+			String hexDigits = Integer.toHexString(b).toUpperCase();
+			if(hexDigits.length() == 1) {
+				hex.append("0");
+			}
+			hex.append(hexDigits).append(" ");
+		}
 		String name = getName();
 		String append = "";
 		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-		return "TAG_Float" + append + ": " + value;
+		return "TAG_Byte_Array" + append + ": " + hex.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof ByteArrayTag)) return false;
+		
+		ByteArrayTag tag = (ByteArrayTag) obj;
+		
+		return Arrays.equals(this.getValue(), tag.getValue()) && this.getName().equals(tag.getName());
 	}
 	
 	public Tag clone() {
-		return new FloatTag(this.getName(), this.getValue());
+		byte[] clonedArray = NBTUtils.cloneByteArray(this.getValue());
+		
+		return new ByteArrayTag(this.getName(), clonedArray);
 	}
 
 }

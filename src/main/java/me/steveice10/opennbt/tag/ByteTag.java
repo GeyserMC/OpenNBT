@@ -1,4 +1,4 @@
-package opennbt.tag;
+package me.steveice10.opennbt.tag;
 
 /*
  * OpenNBT License
@@ -17,7 +17,7 @@ package opennbt.tag;
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
  *       
- *     * Neither the name of the JNBT team nor the names of its
+ *     * Neither the name of the OpenNBT team nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  * 
@@ -35,27 +35,27 @@ package opennbt.tag;
  */
 
 /**
- * The <code>TAG_Long</code> tag.
+ * The <code>TAG_Byte</code> tag.
  */
-public final class LongTag extends Tag {
+public final class ByteTag extends Tag {
 
 	/**
 	 * The value.
 	 */
-	private final long value;
+	private final byte value;
 	
 	/**
 	 * Creates the tag.
 	 * @param name The name.
 	 * @param value The value.
 	 */
-	public LongTag(String name, long value) {
+	public ByteTag(String name, byte value) {
 		super(name);
 		this.value = value;
 	}
-	
+
 	@Override
-	public Long getValue() {
+	public Byte getValue() {
 		return value;
 	}
 	
@@ -66,11 +66,11 @@ public final class LongTag extends Tag {
 		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-		return "TAG_Long" + append + ": " + value;
+		return "TAG_Byte" + append + ": " + value;
 	}
 	
 	public Tag clone() {
-		return new LongTag(this.getName(), this.getValue());
+		return new ByteTag(this.getName(), this.getValue());
 	}
-
+	
 }

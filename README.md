@@ -18,4 +18,4 @@ OpenNBT is licensed under the <b>[BSD](http://www.opensource.org/licenses/BSD-3-
 <b>Building the Source</b>
 --------------
 
-Pop the source into your favorite IDE and build! :)
+OpenNBT uses Maven to manage dependencies. Simply run 'mvn clean install' in the source's directory.

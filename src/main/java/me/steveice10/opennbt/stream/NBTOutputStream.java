@@ -1,4 +1,4 @@
-package opennbt.stream;
+package me.steveice10.opennbt.stream;
 
 import java.io.Closeable;
 import java.io.DataOutputStream;
@@ -7,21 +7,22 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
-import opennbt.NBTConstants;
-import opennbt.NBTUtils;
-import opennbt.tag.ByteArrayTag;
-import opennbt.tag.ByteTag;
-import opennbt.tag.CompoundTag;
-import opennbt.tag.DoubleTag;
-import opennbt.tag.EndTag;
-import opennbt.tag.FloatTag;
-import opennbt.tag.IntArrayTag;
-import opennbt.tag.IntTag;
-import opennbt.tag.ListTag;
-import opennbt.tag.LongTag;
-import opennbt.tag.ShortTag;
-import opennbt.tag.StringTag;
-import opennbt.tag.Tag;
+import me.steveice10.opennbt.NBTConstants;
+import me.steveice10.opennbt.NBTUtils;
+import me.steveice10.opennbt.tag.ByteArrayTag;
+import me.steveice10.opennbt.tag.ByteTag;
+import me.steveice10.opennbt.tag.CompoundTag;
+import me.steveice10.opennbt.tag.DoubleTag;
+import me.steveice10.opennbt.tag.EndTag;
+import me.steveice10.opennbt.tag.FloatTag;
+import me.steveice10.opennbt.tag.IntArrayTag;
+import me.steveice10.opennbt.tag.IntTag;
+import me.steveice10.opennbt.tag.ListTag;
+import me.steveice10.opennbt.tag.LongTag;
+import me.steveice10.opennbt.tag.ShortTag;
+import me.steveice10.opennbt.tag.StringTag;
+import me.steveice10.opennbt.tag.Tag;
+
 
 
 /*

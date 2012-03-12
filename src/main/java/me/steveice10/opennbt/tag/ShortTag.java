@@ -1,9 +1,4 @@
-package opennbt.tag;
-
-import java.util.Arrays;
-
-import opennbt.NBTUtils;
-
+package me.steveice10.opennbt.tag;
 
 /*
  * OpenNBT License
@@ -22,7 +17,7 @@ import opennbt.NBTUtils;
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
  *       
- *     * Neither the name of the OpenNBT team nor the names of its
+ *     * Neither the name of the JNBT team nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  * 
@@ -40,61 +35,42 @@ import opennbt.NBTUtils;
  */
 
 /**
- * The <code>TAG_Byte_Array</code> tag.
+ * The <code>TAG_Short</code> tag.
  */
-public final class ByteArrayTag extends Tag {
-	
+public final class ShortTag extends Tag {
+
 	/**
 	 * The value.
 	 */
-	private final byte[] value;
+	private final short value;
 	
 	/**
 	 * Creates the tag.
 	 * @param name The name.
 	 * @param value The value.
 	 */
-	public ByteArrayTag(String name, byte[] value) {
+	public ShortTag(String name, short value) {
 		super(name);
 		this.value = value;
 	}
 	
 	@Override
-	public byte[] getValue() {
+	public Short getValue() {
 		return value;
 	}
 	
 	@Override
 	public String toString() {
-		StringBuilder hex = new StringBuilder();
-		for(byte b : value) {
-			String hexDigits = Integer.toHexString(b).toUpperCase();
-			if(hexDigits.length() == 1) {
-				hex.append("0");
-			}
-			hex.append(hexDigits).append(" ");
-		}
 		String name = getName();
 		String append = "";
 		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-		return "TAG_Byte_Array" + append + ": " + hex.toString();
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof ByteArrayTag)) return false;
-		
-		ByteArrayTag tag = (ByteArrayTag) obj;
-		
-		return Arrays.equals(this.getValue(), tag.getValue()) && this.getName().equals(tag.getName());
+		return "TAG_Short" + append + ": " + value;
 	}
 	
 	public Tag clone() {
-		byte[] clonedArray = NBTUtils.cloneByteArray(this.getValue());
-		
-		return new ByteArrayTag(this.getName(), clonedArray);
+		return new ShortTag(this.getName(), this.getValue());
 	}
 
 }

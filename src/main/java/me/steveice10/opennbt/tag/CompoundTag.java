@@ -1,4 +1,4 @@
-package opennbt.tag;
+package me.steveice10.opennbt.tag;
 
 /*
  * OpenNBT License
@@ -34,50 +34,35 @@ package opennbt.tag;
  * POSSIBILITY OF SUCH DAMAGE. 
  */
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 
-import opennbt.NBTUtils;
+import me.steveice10.opennbt.NBTUtils;
+
 
 
 /**
- * The <code>TAG_List</code> tag.
+ * The <code>TAG_Compound</code> tag.
  */
-public final class ListTag<T extends Tag> extends Tag {
-
-	/**
-	 * The type.
-	 */
-	private final Class<T> type;
+public final class CompoundTag extends Tag {
 	
 	/**
 	 * The value.
 	 */
-	private final List<T> value;
+	private final Map<String, Tag> value;
 	
 	/**
 	 * Creates the tag.
 	 * @param name The name.
-	 * @param type The type of item in the list.
 	 * @param value The value.
 	 */
-	public ListTag(String name, Class<T> type, List<T> value) {
+	public CompoundTag(String name, Map<String, Tag> value) {
 		super(name);
-		this.type = type;
-		this.value = Collections.unmodifiableList(value);
+		this.value = Collections.unmodifiableMap(value);
 	}
-	
-	/**
-	 * Gets the type of item in this list.
-	 * @return The type of item in this list.
-	 */
-	public Class<T> getType() {
-		return type;
-	}
-	
+
 	@Override
-	public List<T> getValue() {
+	public Map<String, Tag> getValue() {
 		return value;
 	}
 	
@@ -89,23 +74,18 @@ public final class ListTag<T extends Tag> extends Tag {
 			append = "(\"" + this.getName() + "\")";
 		}
 		StringBuilder bldr = new StringBuilder();
-		bldr.append("TAG_List" + append + ": " + value.size() + " entries of type " + NBTUtils.getTypeName(type) + "\r\n{\r\n");
-		for(Tag t : value) {
-			bldr.append("   " + t.toString().replaceAll("\r\n", "\r\n   ") + "\r\n");
+		bldr.append("TAG_Compound" + append + ": " + value.size() + " entries\r\n{\r\n");
+		for(Map.Entry<String, Tag> entry : value.entrySet()) {
+			bldr.append("   " + entry.getValue().toString().replaceAll("\r\n", "\r\n   ") + "\r\n");
 		}
 		bldr.append("}");
 		return bldr.toString();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Tag clone() {
-		List<T> newList = new ArrayList<T>();
+		Map<String, Tag> newMap = NBTUtils.cloneMap(this.getValue());
 		
-		for(T value : this.getValue()) {
-			newList.add((T) value.clone());
-		}
-		
-		return new ListTag<T>(this.getName(), this.getType(), newList);
+		return new CompoundTag(this.getName(), newMap);
 	}
 
 }

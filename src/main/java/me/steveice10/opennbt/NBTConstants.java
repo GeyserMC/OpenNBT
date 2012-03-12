@@ -1,4 +1,6 @@
-package opennbt.tag;
+package me.steveice10.opennbt;
+
+import java.nio.charset.Charset;
 
 /*
  * OpenNBT License
@@ -35,42 +37,36 @@ package opennbt.tag;
  */
 
 /**
- * The <code>TAG_Byte</code> tag.
+ * A class which holds constant values.
  */
-public final class ByteTag extends Tag {
-
-	/**
-	 * The value.
-	 */
-	private final byte value;
+public final class NBTConstants {
 	
 	/**
-	 * Creates the tag.
-	 * @param name The name.
-	 * @param value The value.
+	 * The character set used by NBT (UTF-8).
 	 */
-	public ByteTag(String name, byte value) {
-		super(name);
-		this.value = value;
+	public static final Charset CHARSET = Charset.forName("UTF-8");
+	
+	/**
+	 * Tag type constants.
+	 */
+	public static final int TYPE_END = 0,
+		TYPE_BYTE = 1,
+		TYPE_SHORT = 2,
+		TYPE_INT = 3,
+		TYPE_LONG = 4,
+		TYPE_FLOAT = 5,
+		TYPE_DOUBLE = 6,
+		TYPE_BYTE_ARRAY = 7,
+		TYPE_STRING = 8,
+		TYPE_LIST = 9,
+		TYPE_COMPOUND = 10,
+		TYPE_INT_ARRAY = 11;
+	
+	/**
+	 * Default private constructor.
+	 */
+	private NBTConstants() {
+		
 	}
 
-	@Override
-	public Byte getValue() {
-		return value;
-	}
-	
-	@Override
-	public String toString() {
-		String name = getName();
-		String append = "";
-		if(name != null && !name.equals("")) {
-			append = "(\"" + this.getName() + "\")";
-		}
-		return "TAG_Byte" + append + ": " + value;
-	}
-	
-	public Tag clone() {
-		return new ByteTag(this.getName(), this.getValue());
-	}
-	
 }

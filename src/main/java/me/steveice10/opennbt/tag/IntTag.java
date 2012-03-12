@@ -1,4 +1,4 @@
-package opennbt.tag;
+package me.steveice10.opennbt.tag;
 
 /*
  * OpenNBT License
@@ -35,27 +35,27 @@ package opennbt.tag;
  */
 
 /**
- * The <code>TAG_Short</code> tag.
+ * The <code>TAG_Int</code> tag.
  */
-public final class ShortTag extends Tag {
+public final class IntTag extends Tag {
 
 	/**
 	 * The value.
 	 */
-	private final short value;
+	private final int value;
 	
 	/**
 	 * Creates the tag.
 	 * @param name The name.
 	 * @param value The value.
 	 */
-	public ShortTag(String name, short value) {
+	public IntTag(String name, int value) {
 		super(name);
 		this.value = value;
 	}
-	
+
 	@Override
-	public Short getValue() {
+	public Integer getValue() {
 		return value;
 	}
 	
@@ -66,11 +66,11 @@ public final class ShortTag extends Tag {
 		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-		return "TAG_Short" + append + ": " + value;
+		return "TAG_Int" + append + ": " + value;
 	}
 	
 	public Tag clone() {
-		return new ShortTag(this.getName(), this.getValue());
+		return new IntTag(this.getName(), this.getValue());
 	}
 
 }
