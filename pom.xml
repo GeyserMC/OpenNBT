@@ -2,12 +2,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.steveice10</groupId>
 	<artifactId>opennbt</artifactId>
-	<version>dev-SNAPSHOT</version>
+	<version>1.0</version>
+	<packaging>jar</packaging>
+
 	<name>OpenNBT</name>
-	<description></description>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+	<description>An continuation of Graham Edgecombe's jNBT library.</description>
+	<url>http://github.com/Steveice10/OpenNBT/</url>
 
 	<licenses>
 		<license>
@@ -17,13 +17,22 @@
 		</license>
 	</licenses>
 
-	<!-- Repository locations -->
-	<repositories>
-	</repositories>
+	<scm>
+		<url>http://github.com/Steveice10/OpenNBT/</url>
+    		<connection>scm:git:git://github.com/Steveice10/OpenNBT.git</connection>
+	</scm>
 
-	<!--  Dependencies -->
-	<dependencies>
-	</dependencies>
+  	<developers>
+    		<developer>
+      			<id>steveice10</id>
+      			<name>Steveice10</name>
+      			<email>Steveice10@gmail.com</email>
+    		</developer>
+  	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<build>
 		<defaultGoal>clean install</defaultGoal>
