@@ -1,23 +1,23 @@
-package me.steveice10.opennbt;
+package com.github.steveice10.opennbt;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import me.steveice10.opennbt.tag.ByteArrayTag;
-import me.steveice10.opennbt.tag.ByteTag;
-import me.steveice10.opennbt.tag.CompoundTag;
-import me.steveice10.opennbt.tag.DoubleTag;
-import me.steveice10.opennbt.tag.EndTag;
-import me.steveice10.opennbt.tag.FloatTag;
-import me.steveice10.opennbt.tag.IntArrayTag;
-import me.steveice10.opennbt.tag.IntTag;
-import me.steveice10.opennbt.tag.ListTag;
-import me.steveice10.opennbt.tag.LongTag;
-import me.steveice10.opennbt.tag.ShortTag;
-import me.steveice10.opennbt.tag.StringTag;
-import me.steveice10.opennbt.tag.Tag;
 
+import com.github.steveice10.opennbt.tag.ByteArrayTag;
+import com.github.steveice10.opennbt.tag.ByteTag;
+import com.github.steveice10.opennbt.tag.CompoundTag;
+import com.github.steveice10.opennbt.tag.DoubleTag;
+import com.github.steveice10.opennbt.tag.EndTag;
+import com.github.steveice10.opennbt.tag.FloatTag;
+import com.github.steveice10.opennbt.tag.IntArrayTag;
+import com.github.steveice10.opennbt.tag.IntTag;
+import com.github.steveice10.opennbt.tag.ListTag;
+import com.github.steveice10.opennbt.tag.LongTag;
+import com.github.steveice10.opennbt.tag.ShortTag;
+import com.github.steveice10.opennbt.tag.StringTag;
+import com.github.steveice10.opennbt.tag.Tag;
 import com.sun.media.sound.InvalidFormatException;
 
 

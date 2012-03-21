@@ -1,4 +1,4 @@
-package me.steveice10.opennbt.tag;
+package com.github.steveice10.opennbt.tag;
 
 /*
  * OpenNBT License
@@ -34,28 +34,36 @@ package me.steveice10.opennbt.tag;
  * POSSIBILITY OF SUCH DAMAGE. 
  */
 
-/**
- * The <code>TAG_String</code> tag.
- */
-public final class StringTag extends Tag {
+import java.util.Collections;
+import java.util.Map;
 
+import com.github.steveice10.opennbt.NBTUtils;
+
+
+
+
+/**
+ * The <code>TAG_Compound</code> tag.
+ */
+public final class CompoundTag extends Tag {
+	
 	/**
 	 * The value.
 	 */
-	private final String value;
+	private final Map<String, Tag> value;
 	
 	/**
 	 * Creates the tag.
 	 * @param name The name.
 	 * @param value The value.
 	 */
-	public StringTag(String name, String value) {
+	public CompoundTag(String name, Map<String, Tag> value) {
 		super(name);
-		this.value = value;
+		this.value = Collections.unmodifiableMap(value);
 	}
-	
+
 	@Override
-	public String getValue() {
+	public Map<String, Tag> getValue() {
 		return value;
 	}
 	
@@ -66,11 +74,19 @@ public final class StringTag extends Tag {
 		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-		return "TAG_String" + append + ": " + value;
+		StringBuilder bldr = new StringBuilder();
+		bldr.append("TAG_Compound" + append + ": " + value.size() + " entries\r\n{\r\n");
+		for(Map.Entry<String, Tag> entry : value.entrySet()) {
+			bldr.append("   " + entry.getValue().toString().replaceAll("\r\n", "\r\n   ") + "\r\n");
+		}
+		bldr.append("}");
+		return bldr.toString();
 	}
 	
 	public Tag clone() {
-		return new StringTag(this.getName(), this.getValue());
+		Map<String, Tag> newMap = NBTUtils.cloneMap(this.getValue());
+		
+		return new CompoundTag(this.getName(), newMap);
 	}
 
 }

@@ -1,4 +1,11 @@
-package me.steveice10.opennbt.tag;
+package com.github.steveice10.opennbt.tag;
+
+import java.util.Arrays;
+
+import com.github.steveice10.opennbt.NBTUtils;
+
+
+
 
 /*
  * OpenNBT License
@@ -17,7 +24,7 @@ package me.steveice10.opennbt.tag;
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
  *       
- *     * Neither the name of the JNBT team nor the names of its
+ *     * Neither the name of the OpenNBT team nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  * 
@@ -34,58 +41,62 @@ package me.steveice10.opennbt.tag;
  * POSSIBILITY OF SUCH DAMAGE. 
  */
 
-import java.util.Collections;
-import java.util.Map;
-
-import me.steveice10.opennbt.NBTUtils;
-
-
-
 /**
- * The <code>TAG_Compound</code> tag.
+ * The <code>TAG_Byte_Array</code> tag.
  */
-public final class CompoundTag extends Tag {
+public final class ByteArrayTag extends Tag {
 	
 	/**
 	 * The value.
 	 */
-	private final Map<String, Tag> value;
+	private final byte[] value;
 	
 	/**
 	 * Creates the tag.
 	 * @param name The name.
 	 * @param value The value.
 	 */
-	public CompoundTag(String name, Map<String, Tag> value) {
+	public ByteArrayTag(String name, byte[] value) {
 		super(name);
-		this.value = Collections.unmodifiableMap(value);
+		this.value = value;
 	}
-
+	
 	@Override
-	public Map<String, Tag> getValue() {
+	public byte[] getValue() {
 		return value;
 	}
 	
 	@Override
 	public String toString() {
+		StringBuilder hex = new StringBuilder();
+		for(byte b : value) {
+			String hexDigits = Integer.toHexString(b).toUpperCase();
+			if(hexDigits.length() == 1) {
+				hex.append("0");
+			}
+			hex.append(hexDigits).append(" ");
+		}
 		String name = getName();
 		String append = "";
 		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-		StringBuilder bldr = new StringBuilder();
-		bldr.append("TAG_Compound" + append + ": " + value.size() + " entries\r\n{\r\n");
-		for(Map.Entry<String, Tag> entry : value.entrySet()) {
-			bldr.append("   " + entry.getValue().toString().replaceAll("\r\n", "\r\n   ") + "\r\n");
-		}
-		bldr.append("}");
-		return bldr.toString();
+		return "TAG_Byte_Array" + append + ": " + hex.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof ByteArrayTag)) return false;
+		
+		ByteArrayTag tag = (ByteArrayTag) obj;
+		
+		return Arrays.equals(this.getValue(), tag.getValue()) && this.getName().equals(tag.getName());
 	}
 	
 	public Tag clone() {
-		Map<String, Tag> newMap = NBTUtils.cloneMap(this.getValue());
+		byte[] clonedArray = NBTUtils.cloneByteArray(this.getValue());
 		
-		return new CompoundTag(this.getName(), newMap);
+		return new ByteArrayTag(this.getName(), clonedArray);
 	}
 
 }

@@ -1,4 +1,4 @@
-package me.steveice10.opennbt.tag;
+package com.github.steveice10.opennbt.tag;
 
 /*
  * OpenNBT License

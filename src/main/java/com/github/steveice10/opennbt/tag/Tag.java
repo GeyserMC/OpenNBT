@@ -1,4 +1,4 @@
-package me.steveice10.opennbt.tag;
+package com.github.steveice10.opennbt.tag;
 
 /*
  * OpenNBT License
@@ -35,42 +35,46 @@ package me.steveice10.opennbt.tag;
  */
 
 /**
- * The <code>TAG_Long</code> tag.
+ * Represents a single NBT tag.
  */
-public final class LongTag extends Tag {
-
-	/**
-	 * The value.
-	 */
-	private final long value;
+public abstract class Tag implements Cloneable {
 	
 	/**
-	 * Creates the tag.
+	 * The name of this tag.
+	 */
+	private final String name;
+	
+	/**
+	 * Creates the tag with the specified name.
 	 * @param name The name.
-	 * @param value The value.
 	 */
-	public LongTag(String name, long value) {
-		super(name);
-		this.value = value;
+	public Tag(String name) {
+		this.name = name;
 	}
+	
+	/**
+	 * Gets the name of this tag.
+	 * @return The name of this tag.
+	 */
+	public final String getName() {
+		return name;
+	}
+	
+	/**
+	 * Gets the value of this tag.
+	 * @return The value of this tag.
+	 */
+	public abstract Object getValue();
 	
 	@Override
-	public Long getValue() {
-		return value;
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Tag)) return false;
+		
+		Tag tag = (Tag) obj;
+		
+		return this.getValue().equals(tag.getValue()) && this.getName().equals(tag.getName());
 	}
 	
-	@Override
-	public String toString() {
-		String name = getName();
-		String append = "";
-		if(name != null && !name.equals("")) {
-			append = "(\"" + this.getName() + "\")";
-		}
-		return "TAG_Long" + append + ": " + value;
-	}
-	
-	public Tag clone() {
-		return new LongTag(this.getName(), this.getValue());
-	}
+	public abstract Tag clone();
 
 }

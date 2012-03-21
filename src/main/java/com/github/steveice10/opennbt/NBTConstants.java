@@ -1,4 +1,6 @@
-package me.steveice10.opennbt.tag;
+package com.github.steveice10.opennbt;
+
+import java.nio.charset.Charset;
 
 /*
  * OpenNBT License
@@ -17,7 +19,7 @@ package me.steveice10.opennbt.tag;
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
  *       
- *     * Neither the name of the JNBT team nor the names of its
+ *     * Neither the name of the OpenNBT team nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  * 
@@ -35,42 +37,36 @@ package me.steveice10.opennbt.tag;
  */
 
 /**
- * The <code>TAG_Short</code> tag.
+ * A class which holds constant values.
  */
-public final class ShortTag extends Tag {
-
-	/**
-	 * The value.
-	 */
-	private final short value;
+public final class NBTConstants {
 	
 	/**
-	 * Creates the tag.
-	 * @param name The name.
-	 * @param value The value.
+	 * The character set used by NBT (UTF-8).
 	 */
-	public ShortTag(String name, short value) {
-		super(name);
-		this.value = value;
-	}
+	public static final Charset CHARSET = Charset.forName("UTF-8");
 	
-	@Override
-	public Short getValue() {
-		return value;
-	}
+	/**
+	 * Tag type constants.
+	 */
+	public static final int TYPE_END = 0,
+		TYPE_BYTE = 1,
+		TYPE_SHORT = 2,
+		TYPE_INT = 3,
+		TYPE_LONG = 4,
+		TYPE_FLOAT = 5,
+		TYPE_DOUBLE = 6,
+		TYPE_BYTE_ARRAY = 7,
+		TYPE_STRING = 8,
+		TYPE_LIST = 9,
+		TYPE_COMPOUND = 10,
+		TYPE_INT_ARRAY = 11;
 	
-	@Override
-	public String toString() {
-		String name = getName();
-		String append = "";
-		if(name != null && !name.equals("")) {
-			append = "(\"" + this.getName() + "\")";
-		}
-		return "TAG_Short" + append + ": " + value;
-	}
-	
-	public Tag clone() {
-		return new ShortTag(this.getName(), this.getValue());
+	/**
+	 * Default private constructor.
+	 */
+	private NBTConstants() {
+		
 	}
 
 }

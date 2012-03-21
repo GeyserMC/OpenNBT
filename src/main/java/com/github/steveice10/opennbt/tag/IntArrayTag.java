@@ -1,7 +1,7 @@
-package me.steveice10.opennbt.tag;
+package com.github.steveice10.opennbt.tag;
 
-import me.steveice10.opennbt.NBTUtils;
-import me.steveice10.opennbt.tag.Tag;
+import com.github.steveice10.opennbt.NBTUtils;
+import com.github.steveice10.opennbt.tag.Tag;
 
 /*
  * OpenNBT License

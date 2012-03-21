@@ -1,4 +1,4 @@
-package me.steveice10.opennbt;
+package com.github.steveice10.opennbt;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import me.steveice10.opennbt.stream.NBTInputStream;
-import me.steveice10.opennbt.stream.NBTOutputStream;
-import me.steveice10.opennbt.tag.Tag;
+import com.github.steveice10.opennbt.stream.NBTInputStream;
+import com.github.steveice10.opennbt.stream.NBTOutputStream;
+import com.github.steveice10.opennbt.tag.Tag;
+
 
 
 public class NBTIOUtils {

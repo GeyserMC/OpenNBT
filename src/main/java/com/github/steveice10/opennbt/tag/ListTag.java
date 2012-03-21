@@ -1,4 +1,4 @@
-package me.steveice10.opennbt.tag;
+package com.github.steveice10.opennbt.tag;
 
 /*
  * OpenNBT License
@@ -34,28 +34,52 @@ package me.steveice10.opennbt.tag;
  * POSSIBILITY OF SUCH DAMAGE. 
  */
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.github.steveice10.opennbt.NBTUtils;
+
+
+
+
 /**
- * The <code>TAG_Double</code> tag.
+ * The <code>TAG_List</code> tag.
  */
-public final class DoubleTag extends Tag {
+public final class ListTag<T extends Tag> extends Tag {
+
+	/**
+	 * The type.
+	 */
+	private final Class<T> type;
 	
 	/**
 	 * The value.
 	 */
-	private final double value;
-
+	private final List<T> value;
+	
 	/**
 	 * Creates the tag.
 	 * @param name The name.
+	 * @param type The type of item in the list.
 	 * @param value The value.
 	 */
-	public DoubleTag(String name, double value) {
+	public ListTag(String name, Class<T> type, List<T> value) {
 		super(name);
-		this.value = value;
+		this.type = type;
+		this.value = Collections.unmodifiableList(value);
+	}
+	
+	/**
+	 * Gets the type of item in this list.
+	 * @return The type of item in this list.
+	 */
+	public Class<T> getType() {
+		return type;
 	}
 	
 	@Override
-	public Double getValue() {
+	public List<T> getValue() {
 		return value;
 	}
 	
@@ -66,11 +90,24 @@ public final class DoubleTag extends Tag {
 		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-		return "TAG_Double" + append + ": " + value;
+		StringBuilder bldr = new StringBuilder();
+		bldr.append("TAG_List" + append + ": " + value.size() + " entries of type " + NBTUtils.getTypeName(type) + "\r\n{\r\n");
+		for(Tag t : value) {
+			bldr.append("   " + t.toString().replaceAll("\r\n", "\r\n   ") + "\r\n");
+		}
+		bldr.append("}");
+		return bldr.toString();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Tag clone() {
-		return new DoubleTag(this.getName(), this.getValue());
+		List<T> newList = new ArrayList<T>();
+		
+		for(T value : this.getValue()) {
+			newList.add((T) value.clone());
+		}
+		
+		return new ListTag<T>(this.getName(), this.getType(), newList);
 	}
 
 }
