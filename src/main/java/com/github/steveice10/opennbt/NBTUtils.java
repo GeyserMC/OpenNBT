@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 
+import com.github.steveice10.opennbt.exception.InvalidNBTException;
 import com.github.steveice10.opennbt.tag.ByteArrayTag;
 import com.github.steveice10.opennbt.tag.ByteTag;
 import com.github.steveice10.opennbt.tag.CompoundTag;
@@ -18,7 +19,6 @@ import com.github.steveice10.opennbt.tag.LongTag;
 import com.github.steveice10.opennbt.tag.ShortTag;
 import com.github.steveice10.opennbt.tag.StringTag;
 import com.github.steveice10.opennbt.tag.Tag;
-import com.sun.media.sound.InvalidFormatException;
 
 
 
@@ -227,17 +227,17 @@ public final class NBTUtils {
      * @param key
      * @param expected
      * @return child tag
-     * @throws InvalidFormatException
+     * @throws InvalidNBTException
      */
-    public static <T extends Tag> T getChildTag(Map<String,Tag> items, String key, Class<T> expected) throws InvalidFormatException {
+    public static <T extends Tag> T getChildTag(Map<String,Tag> items, String key, Class<T> expected) throws InvalidNBTException {
         if (!items.containsKey(key)) {
-            throw new InvalidFormatException("Missing a \"" + key + "\" tag");
+            throw new InvalidNBTException("Missing a \"" + key + "\" tag");
         }
         
         Tag tag = items.get(key);
         
         if (!expected.isInstance(tag)) {
-            throw new InvalidFormatException(key + " tag is not of tag type " + expected.getName());
+            throw new InvalidNBTException(key + " tag is not of tag type " + expected.getName());
         }
         
         return expected.cast(tag);
