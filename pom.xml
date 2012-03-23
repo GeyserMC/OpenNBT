@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.steveice10</groupId>
 	<artifactId>opennbt</artifactId>
-	<version>1.0</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>OpenNBT</name>
@@ -18,8 +18,9 @@
 	</licenses>
 
 	<scm>
+    		<connection>scm:git:git@github.com:Steveice10/OpenNBT.git</connection>
+		<developerConnection>scm:git:git@github.com:Steveice10/OpenNBT.git</developerConnection>
 		<url>http://github.com/Steveice10/OpenNBT/</url>
-    		<connection>scm:git:git://github.com/Steveice10/OpenNBT.git</connection>
 	</scm>
 
   	<developers>
@@ -33,6 +34,12 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+  	<parent>
+    		<groupId>org.sonatype.oss</groupId>
+    		<artifactId>oss-parent</artifactId>
+    		<version>7</version>
+  	</parent>
 
 	<build>
 		<defaultGoal>clean install</defaultGoal>
