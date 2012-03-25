@@ -1,4 +1,6 @@
-package ch.spacebase.opennbt.tag;
+package ch.spacebase.opennbt.tag.custom;
+
+import ch.spacebase.opennbt.tag.Tag;
 
 /*
  * OpenNBT License
@@ -35,27 +37,27 @@ package ch.spacebase.opennbt.tag;
  */
 
 /**
- * The <code>TAG_Int</code> tag.
+ * The <code>TAG_Object</code> tag.
  */
-public final class IntTag extends Tag {
+public final class ObjectTag extends Tag {
 
 	/**
 	 * The value.
 	 */
-	private final int value;
+	private final Object value;
 	
 	/**
 	 * Creates the tag.
 	 * @param name The name.
 	 * @param value The value.
 	 */
-	public IntTag(String name, int value) {
+	public ObjectTag(String name, Object value) {
 		super(name);
 		this.value = value;
 	}
-
+	
 	@Override
-	public Integer getValue() {
+	public Object getValue() {
 		return value;
 	}
 	
@@ -66,11 +68,11 @@ public final class IntTag extends Tag {
 		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-		return "TAG_Int" + append + ": " + value;
+		return "TAG_Object" + append + ": " + value.toString();
 	}
 	
-	public IntTag clone() {
-		return new IntTag(this.getName(), this.getValue());
+	public ObjectTag clone() {
+		return new ObjectTag(this.getName(), this.getValue());
 	}
 
 }

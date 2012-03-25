@@ -69,7 +69,7 @@ public final class ByteTag extends Tag {
 		return "TAG_Byte" + append + ": " + value;
 	}
 	
-	public Tag clone() {
+	public ByteTag clone() {
 		return new ByteTag(this.getName(), this.getValue());
 	}
 	

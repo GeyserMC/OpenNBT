@@ -3,6 +3,7 @@ package ch.spacebase.opennbt.stream;
 import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
@@ -22,6 +23,13 @@ import ch.spacebase.opennbt.tag.LongTag;
 import ch.spacebase.opennbt.tag.ShortTag;
 import ch.spacebase.opennbt.tag.StringTag;
 import ch.spacebase.opennbt.tag.Tag;
+import ch.spacebase.opennbt.tag.custom.DoubleArrayTag;
+import ch.spacebase.opennbt.tag.custom.FloatArrayTag;
+import ch.spacebase.opennbt.tag.custom.LongArrayTag;
+import ch.spacebase.opennbt.tag.custom.ObjectArrayTag;
+import ch.spacebase.opennbt.tag.custom.ObjectTag;
+import ch.spacebase.opennbt.tag.custom.ShortArrayTag;
+import ch.spacebase.opennbt.tag.custom.StringArrayTag;
 
 /*
  * OpenNBT License
@@ -154,6 +162,27 @@ public final class NBTOutputStream implements Closeable {
 		case NBTConstants.TYPE_INT_ARRAY:
 			writeIntArrayTagPayload((IntArrayTag) tag);
 			break;
+		case NBTConstants.TYPE_DOUBLE_ARRAY:
+			writeDoubleArrayTagPayload((DoubleArrayTag) tag);
+			break;
+		case NBTConstants.TYPE_FLOAT_ARRAY:
+			writeFloatArrayTagPayload((FloatArrayTag) tag);
+			break;
+		case NBTConstants.TYPE_LONG_ARRAY:
+			writeLongArrayTagPayload((LongArrayTag) tag);
+			break;
+		case NBTConstants.TYPE_OBJECT_ARRAY:
+			writeObjectArrayTagPayload((ObjectArrayTag) tag);
+			break;
+		case NBTConstants.TYPE_OBJECT:
+			writeObjectTagPayload((ObjectTag) tag);
+			break;
+		case NBTConstants.TYPE_SHORT_ARRAY:
+			writeShortArrayTagPayload((ShortArrayTag) tag);
+			break;
+		case NBTConstants.TYPE_STRING_ARRAY:
+			writeStringArrayTagPayload((StringArrayTag) tag);
+			break;
 		default:
 			logger.warning("Unknown tag found while writing, ignoring...");
 		}
@@ -283,6 +312,102 @@ public final class NBTOutputStream implements Closeable {
         
         for (int i = 0; i < data.length; i++) {
             os.writeInt(data[i]);
+        } 
+    }
+    
+	/** Writes a <code>TAG_Double_Array<code> tag.
+	 * @param tag The tag
+	 * @throws IOException if an I/O error occurs.
+	 */
+    private void writeDoubleArrayTagPayload(DoubleArrayTag tag) throws IOException {
+        double[] data = tag.getValue();
+        
+        os.writeInt(data.length);
+        
+        for (int i = 0; i < data.length; i++) {
+            os.writeDouble(data[i]);
+        } 
+    }
+    
+	/** Writes a <code>TAG_Float_Array<code> tag.
+	 * @param tag The tag
+	 * @throws IOException if an I/O error occurs.
+	 */
+    private void writeFloatArrayTagPayload(FloatArrayTag tag) throws IOException {
+        float[] data = tag.getValue();
+        
+        os.writeInt(data.length);
+        
+        for (int i = 0; i < data.length; i++) {
+            os.writeFloat(data[i]);
+        } 
+    }
+    
+	/** Writes a <code>TAG_Long_Array<code> tag.
+	 * @param tag The tag
+	 * @throws IOException if an I/O error occurs.
+	 */
+    private void writeLongArrayTagPayload(LongArrayTag tag) throws IOException {
+        long[] data = tag.getValue();
+        
+        os.writeInt(data.length);
+        
+        for (int i = 0; i < data.length; i++) {
+            os.writeLong(data[i]);
+        } 
+    }
+    
+	/** Writes a <code>TAG_Object_Array<code> tag.
+	 * @param tag The tag
+	 * @throws IOException if an I/O error occurs.
+	 */
+    private void writeObjectArrayTagPayload(ObjectArrayTag tag) throws IOException {
+        Object[] data = tag.getValue();
+        
+        os.writeInt(data.length);
+        ObjectOutputStream str = new ObjectOutputStream(os);
+        
+        for (int i = 0; i < data.length; i++) {
+            str.writeObject(data[i]);
+        } 
+    }
+    
+	/** Writes a <code>TAG_Object<code> tag.
+	 * @param tag The tag
+	 * @throws IOException if an I/O error occurs.
+	 */
+    private void writeObjectTagPayload(ObjectTag tag) throws IOException {
+    	(new ObjectOutputStream(os)).writeObject(tag.getValue());
+    }
+    
+	/** Writes a <code>TAG_Short_Array<code> tag.
+	 * @param tag The tag
+	 * @throws IOException if an I/O error occurs.
+	 */
+    private void writeShortArrayTagPayload(ShortArrayTag tag) throws IOException {
+        short[] data = tag.getValue();
+        
+        os.writeInt(data.length);
+        
+        for (int i = 0; i < data.length; i++) {
+            os.writeShort(data[i]);
+        } 
+    }
+    
+	/** Writes a <code>TAG_String_Array<code> tag.
+	 * @param tag The tag
+	 * @throws IOException if an I/O error occurs.
+	 */
+    private void writeStringArrayTagPayload(StringArrayTag tag) throws IOException {
+        String[] data = tag.getValue();
+        
+        os.writeInt(data.length);
+        byte[] bytes;
+        
+        for (int i = 0; i < data.length; i++) {
+    		bytes = data[i].getBytes(NBTConstants.CHARSET);
+    		os.writeShort(bytes.length);
+    		os.write(bytes);
         } 
     }
 

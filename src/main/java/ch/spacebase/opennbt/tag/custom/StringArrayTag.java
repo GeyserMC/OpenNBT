@@ -1,4 +1,4 @@
-package ch.spacebase.opennbt.tag;
+package ch.spacebase.opennbt.tag.custom;
 
 import java.util.Arrays;
 
@@ -39,14 +39,14 @@ import ch.spacebase.opennbt.tag.Tag;
  */
 
 /**
- * The <code>TAG_Int_Array</code> tag.
+ * The <code>TAG_String_Array</code> tag.
  */
-public final class IntArrayTag extends Tag {
+public final class StringArrayTag extends Tag {
 
 	/**
 	 * The value.
 	 */
-	private final int[] value;
+	private final String[] value;
 
 	/**
 	 * Creates the tag.
@@ -56,30 +56,18 @@ public final class IntArrayTag extends Tag {
 	 * @param value
 	 *            The value.
 	 */
-	public IntArrayTag(String name, int[] value) {
+	public StringArrayTag(String name, String[] value) {
 		super(name);
 		this.value = value;
 	}
 
 	@Override
-	public int[] getValue() {
+	public String[] getValue() {
 		return value;
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder hex = new StringBuilder();
-
-		for (int curr : value) {
-			String hexDigits = Integer.toHexString(curr).toUpperCase();
-
-			if (hexDigits.length() == 1) {
-				hex.append("0");
-			}
-
-			hex.append(hexDigits).append(" ");
-		}
-
 		String name = getName();
 		String append = "";
 
@@ -87,23 +75,23 @@ public final class IntArrayTag extends Tag {
 			append = "(\"" + this.getName() + "\")";
 		}
 
-		return "TAG_Int_Array" + append + ": " + hex.toString();
+		return "TAG_String_Array" + append + ": " + Arrays.toString(value);
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof IntArrayTag)) return false;
+		if(!(obj instanceof StringArrayTag)) return false;
 		
-		IntArrayTag tag = (IntArrayTag) obj;
+		StringArrayTag tag = (StringArrayTag) obj;
 		
 		return Arrays.equals(this.getValue(), tag.getValue()) && this.getName().equals(tag.getName());
 	}
 
 	@Override
-	public IntArrayTag clone() {
-		int[] clonedArray = this.getValue().clone();
+	public StringArrayTag clone() {
+		String[] clonedArray = this.getValue().clone();
 
-		return new IntArrayTag(this.getName(), clonedArray);
+		return new StringArrayTag(this.getName(), clonedArray);
 	}
 
 }

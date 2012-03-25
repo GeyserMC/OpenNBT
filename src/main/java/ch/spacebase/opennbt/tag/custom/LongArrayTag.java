@@ -1,4 +1,4 @@
-package ch.spacebase.opennbt.tag;
+package ch.spacebase.opennbt.tag.custom;
 
 import java.util.Arrays;
 
@@ -39,14 +39,14 @@ import ch.spacebase.opennbt.tag.Tag;
  */
 
 /**
- * The <code>TAG_Int_Array</code> tag.
+ * The <code>TAG_Long_Array</code> tag.
  */
-public final class IntArrayTag extends Tag {
+public final class LongArrayTag extends Tag {
 
 	/**
 	 * The value.
 	 */
-	private final int[] value;
+	private final long[] value;
 
 	/**
 	 * Creates the tag.
@@ -56,30 +56,18 @@ public final class IntArrayTag extends Tag {
 	 * @param value
 	 *            The value.
 	 */
-	public IntArrayTag(String name, int[] value) {
+	public LongArrayTag(String name, long[] value) {
 		super(name);
 		this.value = value;
 	}
 
 	@Override
-	public int[] getValue() {
+	public long[] getValue() {
 		return value;
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder hex = new StringBuilder();
-
-		for (int curr : value) {
-			String hexDigits = Integer.toHexString(curr).toUpperCase();
-
-			if (hexDigits.length() == 1) {
-				hex.append("0");
-			}
-
-			hex.append(hexDigits).append(" ");
-		}
-
 		String name = getName();
 		String append = "";
 
@@ -87,23 +75,23 @@ public final class IntArrayTag extends Tag {
 			append = "(\"" + this.getName() + "\")";
 		}
 
-		return "TAG_Int_Array" + append + ": " + hex.toString();
+		return "TAG_Long_Array" + append + ": " + Arrays.toString(value);
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof IntArrayTag)) return false;
+		if(!(obj instanceof LongArrayTag)) return false;
 		
-		IntArrayTag tag = (IntArrayTag) obj;
+		LongArrayTag tag = (LongArrayTag) obj;
 		
 		return Arrays.equals(this.getValue(), tag.getValue()) && this.getName().equals(tag.getName());
 	}
 
 	@Override
-	public IntArrayTag clone() {
-		int[] clonedArray = this.getValue().clone();
+	public LongArrayTag clone() {
+		long[] clonedArray = this.getValue().clone();
 
-		return new IntArrayTag(this.getName(), clonedArray);
+		return new LongArrayTag(this.getName(), clonedArray);
 	}
 
 }

@@ -69,7 +69,7 @@ public final class StringTag extends Tag {
 		return "TAG_String" + append + ": " + value;
 	}
 	
-	public Tag clone() {
+	public StringTag clone() {
 		return new StringTag(this.getName(), this.getValue());
 	}
 

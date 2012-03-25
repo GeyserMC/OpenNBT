@@ -69,7 +69,7 @@ public final class LongTag extends Tag {
 		return "TAG_Long" + append + ": " + value;
 	}
 	
-	public Tag clone() {
+	public LongTag clone() {
 		return new LongTag(this.getName(), this.getValue());
 	}
 

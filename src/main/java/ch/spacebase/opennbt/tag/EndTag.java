@@ -56,7 +56,7 @@ public final class EndTag extends Tag {
 		return "TAG_End";
 	}
 	
-	public Tag clone() {
+	public EndTag clone() {
 		return new EndTag();
 	}
 

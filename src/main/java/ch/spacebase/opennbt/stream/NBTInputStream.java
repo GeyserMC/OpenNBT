@@ -38,6 +38,7 @@ import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +61,14 @@ import ch.spacebase.opennbt.tag.LongTag;
 import ch.spacebase.opennbt.tag.ShortTag;
 import ch.spacebase.opennbt.tag.StringTag;
 import ch.spacebase.opennbt.tag.Tag;
-import ch.spacebase.opennbt.tag.UnknownTag;
+import ch.spacebase.opennbt.tag.custom.DoubleArrayTag;
+import ch.spacebase.opennbt.tag.custom.FloatArrayTag;
+import ch.spacebase.opennbt.tag.custom.LongArrayTag;
+import ch.spacebase.opennbt.tag.custom.ObjectArrayTag;
+import ch.spacebase.opennbt.tag.custom.ObjectTag;
+import ch.spacebase.opennbt.tag.custom.ShortArrayTag;
+import ch.spacebase.opennbt.tag.custom.StringArrayTag;
+import ch.spacebase.opennbt.tag.custom.UnknownTag;
 
 /**
  * <p>This class reads <strong>NBT</strong>, or
@@ -201,6 +209,84 @@ public final class NBTInputStream implements Closeable {
             }
             
             return new IntArrayTag(name, data);
+        case NBTConstants.TYPE_DOUBLE_ARRAY:
+            length = is.readInt();
+            double[] dat = new double[length];
+            
+            for (int i = 0; i < length; i++) {
+                dat[i] = is.readDouble();
+            }
+            
+            return new DoubleArrayTag(name, dat);
+        case NBTConstants.TYPE_FLOAT_ARRAY:
+            length = is.readInt();
+            float[] floats = new float[length];
+            
+            for (int i = 0; i < length; i++) {
+            	floats[i] = is.readFloat();
+            }
+
+            return new FloatArrayTag(name, floats);
+        case NBTConstants.TYPE_LONG_ARRAY:
+            length = is.readInt();
+            long[] longs = new long[length];
+            
+            for (int i = 0; i < length; i++) {
+            	longs[i] = is.readLong();
+            }
+
+            return new LongArrayTag(name, longs);
+        case NBTConstants.TYPE_OBJECT_ARRAY:
+        	length = is.readInt();
+        	Object[] objs = new Object[length];
+        	
+        	ObjectInputStream str = new ObjectInputStream(is);
+
+        	for(int i = 0; i < length; i++) {
+            	try {
+    				objs[i] = str.readObject();
+    			} catch (ClassNotFoundException e) {
+    				logger.severe("Class not found while reading ObjectTag!");
+    				e.printStackTrace();
+    				continue;
+    			}
+        	}
+        	
+        	return new ObjectArrayTag(name, objs);
+        case NBTConstants.TYPE_OBJECT:
+        	str = new ObjectInputStream(is);
+        	Object o = null;
+        	
+        	try {
+				o = str.readObject();
+			} catch (ClassNotFoundException e) {
+				logger.severe("Class not found while reading ObjectTag!");
+				e.printStackTrace();
+				return null;
+			}
+        	
+        	return new ObjectTag(name, o);
+        case NBTConstants.TYPE_SHORT_ARRAY:
+            length = is.readInt();
+            short[] shorts = new short[length];
+            
+            for (int i = 0; i < length; i++) {
+            	shorts[i] = is.readShort();
+            }
+
+            return new ShortArrayTag(name, shorts);
+        case NBTConstants.TYPE_STRING_ARRAY:
+        	length = is.readInt();
+        	String[] strings = new String[length];
+        	
+        	for(int i = 0; i < length; i++) {
+    			int size = is.readShort();
+    			bytes = new byte[size];
+    			is.readFully(bytes);
+    			strings[i] = new String(bytes, NBTConstants.CHARSET);
+        	}
+        	
+        	return new StringArrayTag(name, strings);
 		default:
 			logger.warning("Unknown tag found while reading.");
 			return new UnknownTag(name);

@@ -2,11 +2,6 @@ package ch.spacebase.opennbt.tag;
 
 import java.util.Arrays;
 
-import ch.spacebase.opennbt.NBTUtils;
-
-
-
-
 /*
  * OpenNBT License
  * 
@@ -68,20 +63,14 @@ public final class ByteArrayTag extends Tag {
 	
 	@Override
 	public String toString() {
-		StringBuilder hex = new StringBuilder();
-		for(byte b : value) {
-			String hexDigits = Integer.toHexString(b).toUpperCase();
-			if(hexDigits.length() == 1) {
-				hex.append("0");
-			}
-			hex.append(hexDigits).append(" ");
-		}
 		String name = getName();
 		String append = "";
+		
 		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-		return "TAG_Byte_Array" + append + ": " + hex.toString();
+		
+		return "TAG_Byte_Array" + append + ": " + Arrays.toString(value);
 	}
 	
 	@Override
@@ -93,8 +82,8 @@ public final class ByteArrayTag extends Tag {
 		return Arrays.equals(this.getValue(), tag.getValue()) && this.getName().equals(tag.getName());
 	}
 	
-	public Tag clone() {
-		byte[] clonedArray = NBTUtils.cloneByteArray(this.getValue());
+	public ByteArrayTag clone() {
+		byte[] clonedArray = this.getValue().clone();
 		
 		return new ByteArrayTag(this.getName(), clonedArray);
 	}

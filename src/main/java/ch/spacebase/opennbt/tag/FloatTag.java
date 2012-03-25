@@ -69,7 +69,7 @@ public final class FloatTag extends Tag {
 		return "TAG_Float" + append + ": " + value;
 	}
 	
-	public Tag clone() {
+	public FloatTag clone() {
 		return new FloatTag(this.getName(), this.getValue());
 	}
 

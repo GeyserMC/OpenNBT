@@ -69,7 +69,7 @@ public final class DoubleTag extends Tag {
 		return "TAG_Double" + append + ": " + value;
 	}
 	
-	public Tag clone() {
+	public DoubleTag clone() {
 		return new DoubleTag(this.getName(), this.getValue());
 	}
 

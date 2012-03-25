@@ -113,7 +113,7 @@ public final class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Tag clone() {
+	public ListTag<T> clone() {
 		List<T> newList = new ArrayList<T>();
 		
 		for(T value : this.getValue()) {

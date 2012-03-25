@@ -69,7 +69,7 @@ public final class ShortTag extends Tag {
 		return "TAG_Short" + append + ": " + value;
 	}
 	
-	public Tag clone() {
+	public ShortTag clone() {
 		return new ShortTag(this.getName(), this.getValue());
 	}
 

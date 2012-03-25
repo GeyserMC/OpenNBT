@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-
 import ch.spacebase.opennbt.exception.InvalidNBTException;
 import ch.spacebase.opennbt.tag.ByteArrayTag;
 import ch.spacebase.opennbt.tag.ByteTag;
@@ -20,9 +19,14 @@ import ch.spacebase.opennbt.tag.LongTag;
 import ch.spacebase.opennbt.tag.ShortTag;
 import ch.spacebase.opennbt.tag.StringTag;
 import ch.spacebase.opennbt.tag.Tag;
-import ch.spacebase.opennbt.tag.UnknownTag;
-
-
+import ch.spacebase.opennbt.tag.custom.DoubleArrayTag;
+import ch.spacebase.opennbt.tag.custom.FloatArrayTag;
+import ch.spacebase.opennbt.tag.custom.LongArrayTag;
+import ch.spacebase.opennbt.tag.custom.ObjectArrayTag;
+import ch.spacebase.opennbt.tag.custom.ObjectTag;
+import ch.spacebase.opennbt.tag.custom.ShortArrayTag;
+import ch.spacebase.opennbt.tag.custom.StringArrayTag;
+import ch.spacebase.opennbt.tag.custom.UnknownTag;
 
 /*
  * OpenNBT License
@@ -95,6 +99,20 @@ public final class NBTUtils {
 			return "TAG_String";
 		} else if (clazz.equals(IntArrayTag.class)) {
 			return "TAG_Int_Array";
+		} else if (clazz.equals(DoubleArrayTag.class)) {
+			return "TAG_Double_Array";
+		} else if (clazz.equals(FloatArrayTag.class)) {
+			return "TAG_Float_Array";
+		} else if (clazz.equals(LongArrayTag.class)) {
+			return "TAG_Long_Array";
+		} else if (clazz.equals(ObjectArrayTag.class)) {
+			return "TAG_Object_Array";
+		} else if (clazz.equals(ObjectTag.class)) {
+			return "TAG_Object";
+		} else if (clazz.equals(ShortArrayTag.class)) {
+			return "TAG_Short_Array";
+		} else if (clazz.equals(StringArrayTag.class)) {
+			return "TAG_String_Array";
 		} else if (clazz.equals(UnknownTag.class)) {
 			return "TAG_Unknown";
 		} else {
@@ -134,6 +152,20 @@ public final class NBTUtils {
 			return NBTConstants.TYPE_STRING;
 		} else if(clazz.equals(IntArrayTag.class)) {
 			return NBTConstants.TYPE_INT_ARRAY;
+		} else if(clazz.equals(DoubleArrayTag.class)) {
+			return NBTConstants.TYPE_DOUBLE_ARRAY;
+		} else if(clazz.equals(FloatArrayTag.class)) {
+			return NBTConstants.TYPE_FLOAT_ARRAY;
+		} else if(clazz.equals(LongArrayTag.class)) {
+			return NBTConstants.TYPE_LONG_ARRAY;
+		} else if(clazz.equals(ObjectArrayTag.class)) {
+			return NBTConstants.TYPE_OBJECT_ARRAY;
+		} else if(clazz.equals(ObjectTag.class)) {
+			return NBTConstants.TYPE_OBJECT;
+		} else if(clazz.equals(ShortArrayTag.class)) {
+			return NBTConstants.TYPE_SHORT_ARRAY;
+		} else if(clazz.equals(StringArrayTag.class)) {
+			return NBTConstants.TYPE_STRING_ARRAY;
 		} else if(clazz.equals(UnknownTag.class)) {
 			return NBTConstants.TYPE_UNKNOWN;
 		} else {
@@ -195,42 +227,6 @@ public final class NBTUtils {
 		}
 		
 		return newMap;
-	}
-	
-	/**
-	 * Clones a byte array
-	 * @param array to clone
-	 * @return clone of array
-	 */
-	public static byte[] cloneByteArray(byte[] array) {
-		if(array == null) {
-			return null;
-		} else {
-			int size = array.length;
-			
-			byte[] newArray = new byte[size];
-			System.arraycopy(array, 0, newArray, 0, size);
-			
-			return newArray;
-		}
-	}
-	
-	/**
-	 * Clones an int array
-	 * @param array to clone
-	 * @return clone of array
-	 */
-	public static int[] cloneIntArray(int[] array) {
-		if(array == null) {
-			return null;
-		} else {
-			int size = array.length;
-			
-			int[] newArray = new int[size];
-			System.arraycopy(array, 0, newArray, 0, size);
-			
-			return newArray;
-		}
 	}
 	
     /**

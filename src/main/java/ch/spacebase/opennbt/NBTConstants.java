@@ -61,7 +61,14 @@ public final class NBTConstants {
 		TYPE_LIST = 9,
 		TYPE_COMPOUND = 10,
 		TYPE_INT_ARRAY = 11,
-		TYPE_UNKNOWN = 60;
+		TYPE_DOUBLE_ARRAY = 60,
+		TYPE_FLOAT_ARRAY = 61,
+		TYPE_LONG_ARRAY = 62,
+		TYPE_OBJECT_ARRAY = 63,
+		TYPE_OBJECT = 64,
+		TYPE_SHORT_ARRAY = 65,
+		TYPE_STRING_ARRAY = 66,
+		TYPE_UNKNOWN = 67;
 	
 	/**
 	 * Default private constructor.

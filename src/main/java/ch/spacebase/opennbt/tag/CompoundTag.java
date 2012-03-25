@@ -98,7 +98,7 @@ public final class CompoundTag extends Tag {
 		return bldr.toString();
 	}
 	
-	public Tag clone() {
+	public CompoundTag clone() {
 		Map<String, Tag> newMap = NBTUtils.cloneMap(this.getValue());
 		
 		return new CompoundTag(this.getName(), newMap);

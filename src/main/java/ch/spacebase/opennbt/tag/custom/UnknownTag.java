@@ -1,6 +1,4 @@
-package ch.spacebase.opennbt.tag;
-
-import java.util.Arrays;
+package ch.spacebase.opennbt.tag.custom;
 
 import ch.spacebase.opennbt.tag.Tag;
 
@@ -39,71 +37,45 @@ import ch.spacebase.opennbt.tag.Tag;
  */
 
 /**
- * The <code>TAG_Int_Array</code> tag.
+ * The <code>TAG_Unknown</code> tag.
  */
-public final class IntArrayTag extends Tag {
-
-	/**
-	 * The value.
-	 */
-	private final int[] value;
-
+public class UnknownTag extends Tag {
+	
 	/**
 	 * Creates the tag.
-	 * 
-	 * @param name
-	 *            The name.
-	 * @param value
-	 *            The value.
+	 * @param name The name.
+	 * @param value The value.
 	 */
-	public IntArrayTag(String name, int[] value) {
+	public UnknownTag(String name) {
 		super(name);
-		this.value = value;
 	}
 
 	@Override
-	public int[] getValue() {
-		return value;
+	public Object getValue() {
+		return null;
 	}
-
+	
 	@Override
 	public String toString() {
-		StringBuilder hex = new StringBuilder();
-
-		for (int curr : value) {
-			String hexDigits = Integer.toHexString(curr).toUpperCase();
-
-			if (hexDigits.length() == 1) {
-				hex.append("0");
-			}
-
-			hex.append(hexDigits).append(" ");
-		}
-
 		String name = getName();
 		String append = "";
-
-		if (name != null && !name.equals("")) {
+		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-
-		return "TAG_Int_Array" + append + ": " + hex.toString();
+		return "TAG_Unknown" + append;
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof IntArrayTag)) return false;
+		if(!(obj instanceof UnknownTag)) return false;
 		
-		IntArrayTag tag = (IntArrayTag) obj;
+		UnknownTag tag = (UnknownTag) obj;
 		
-		return Arrays.equals(this.getValue(), tag.getValue()) && this.getName().equals(tag.getName());
+		return tag.getName().equals(this.getName());
 	}
-
-	@Override
-	public IntArrayTag clone() {
-		int[] clonedArray = this.getValue().clone();
-
-		return new IntArrayTag(this.getName(), clonedArray);
+	
+	public UnknownTag clone() {
+		return new UnknownTag(this.getName());
 	}
-
+	
 }
