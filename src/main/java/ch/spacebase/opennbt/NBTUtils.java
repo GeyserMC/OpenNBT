@@ -3,6 +3,7 @@ package ch.spacebase.opennbt;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 
 import ch.spacebase.opennbt.exception.InvalidNBTException;
@@ -19,6 +20,7 @@ import ch.spacebase.opennbt.tag.LongTag;
 import ch.spacebase.opennbt.tag.ShortTag;
 import ch.spacebase.opennbt.tag.StringTag;
 import ch.spacebase.opennbt.tag.Tag;
+import ch.spacebase.opennbt.tag.UnknownTag;
 
 
 
@@ -61,6 +63,8 @@ import ch.spacebase.opennbt.tag.Tag;
  */
 public final class NBTUtils {
 	
+	private static final Logger logger = Logger.getLogger("NBTUtils");
+	
 	/**
 	 * Gets the type name of a tag.
 	 * @param clazz The tag class.
@@ -91,8 +95,11 @@ public final class NBTUtils {
 			return "TAG_String";
 		} else if (clazz.equals(IntArrayTag.class)) {
 			return "TAG_Int_Array";
+		} else if (clazz.equals(UnknownTag.class)) {
+			return "TAG_Unknown";
 		} else {
-			throw new IllegalArgumentException("Invalid tag classs (" + clazz.getName() + ").");
+			logger.warning("Unknown tag class (" + clazz.getName() + ") found.");
+			return "TAG_Unknown";
 		}
 	}
 	
@@ -127,8 +134,11 @@ public final class NBTUtils {
 			return NBTConstants.TYPE_STRING;
 		} else if(clazz.equals(IntArrayTag.class)) {
 			return NBTConstants.TYPE_INT_ARRAY;
+		} else if(clazz.equals(UnknownTag.class)) {
+			return NBTConstants.TYPE_UNKNOWN;
 		} else {
-			throw new IllegalArgumentException("Invalid tag classs (" + clazz.getName() + ").");
+			logger.warning("Unknown tag class (" + clazz.getName() + ") found.");
+			return NBTConstants.TYPE_UNKNOWN;
 		}
 	}
 	
@@ -164,8 +174,11 @@ public final class NBTUtils {
 			return CompoundTag.class;
 		case NBTConstants.TYPE_INT_ARRAY:
 			return IntArrayTag.class;
+		case NBTConstants.TYPE_UNKNOWN:
+			return UnknownTag.class;
 		default:
-			throw new IllegalArgumentException("Invalid tag type : " + type + ".");
+			logger.warning("Unknown tag type (" + type + ") found.");
+			return UnknownTag.class;
 		}
 	}
 	
@@ -219,6 +232,19 @@ public final class NBTUtils {
 			return newArray;
 		}
 	}
+	
+    /**
+     * Get child tag of a NBT structure.
+     *
+     * @param items
+     * @param key
+     * @param expected
+     * @return child tag
+     * @throws InvalidNBTException
+     */
+    public static <T extends Tag> T getChildTag(CompoundTag items, String key, Class<T> expected) throws InvalidNBTException {
+    	return getChildTag(items.getValue(), key, expected);
+    }
 	
     /**
      * Get child tag of a NBT structure.

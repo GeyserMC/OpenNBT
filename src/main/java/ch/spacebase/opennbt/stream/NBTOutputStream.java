@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
 import ch.spacebase.opennbt.NBTConstants;
@@ -21,9 +22,6 @@ import ch.spacebase.opennbt.tag.LongTag;
 import ch.spacebase.opennbt.tag.ShortTag;
 import ch.spacebase.opennbt.tag.StringTag;
 import ch.spacebase.opennbt.tag.Tag;
-
-
-
 
 /*
  * OpenNBT License
@@ -70,6 +68,8 @@ import ch.spacebase.opennbt.tag.Tag;
  */
 public final class NBTOutputStream implements Closeable {
 	
+	private static final Logger logger = Logger.getLogger("NBTOutputStream");
+	
 	/**
 	 * The output stream.
 	 */
@@ -90,8 +90,12 @@ public final class NBTOutputStream implements Closeable {
 	 * @param tag The tag to write.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	public void writeTag(Tag tag) throws IOException {
+	public void writeTag(Tag tag) throws IOException { 
 		int type = NBTUtils.getTypeCode(tag.getClass());
+		if(type == NBTConstants.TYPE_UNKNOWN) {
+			logger.warning("Unknown tag found while writing, ignoring...");
+		}
+
 		String name = tag.getName();
 		byte[] nameBytes = name.getBytes(NBTConstants.CHARSET);
 		
@@ -151,7 +155,7 @@ public final class NBTOutputStream implements Closeable {
 			writeIntArrayTagPayload((IntArrayTag) tag);
 			break;
 		default:
-			throw new IOException("Invalid tag type: " + type + ".");
+			logger.warning("Unknown tag found while writing, ignoring...");
 		}
 	}
 

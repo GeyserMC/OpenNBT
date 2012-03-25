@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 import ch.spacebase.opennbt.NBTConstants;
@@ -59,9 +60,7 @@ import ch.spacebase.opennbt.tag.LongTag;
 import ch.spacebase.opennbt.tag.ShortTag;
 import ch.spacebase.opennbt.tag.StringTag;
 import ch.spacebase.opennbt.tag.Tag;
-
-
-
+import ch.spacebase.opennbt.tag.UnknownTag;
 
 /**
  * <p>This class reads <strong>NBT</strong>, or
@@ -73,6 +72,8 @@ import ch.spacebase.opennbt.tag.Tag;
  * http://www.minecraft.net/docs/NBT.txt</a>.</p>
  */
 public final class NBTInputStream implements Closeable {
+	
+	private static final Logger logger = Logger.getLogger("NBTInputStream");
 	
 	/**
 	 * The data input stream.
@@ -201,7 +202,8 @@ public final class NBTInputStream implements Closeable {
             
             return new IntArrayTag(name, data);
 		default:
-			throw new IOException("Invalid tag type: " + type + ".");
+			logger.warning("Unknown tag found while reading.");
+			return new UnknownTag(name);
 		}
 	}
 
