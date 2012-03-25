@@ -198,7 +198,7 @@ public final class NBTOutputStream implements Closeable {
 		
 		os.writeByte(NBTUtils.getTypeCode(clazz));
 		os.writeInt(size);
-		for(Tag t : tag.getValue()) {
+		for(Tag t : tag) {
 			this.writeTagPayload(t);
 		}
 	}
