@@ -1,4 +1,11 @@
-package com.github.steveice10.opennbt.tag;
+package ch.spacebase.opennbt.tag;
+
+import java.util.Arrays;
+
+import ch.spacebase.opennbt.NBTUtils;
+
+
+
 
 /*
  * OpenNBT License
@@ -35,42 +42,61 @@ package com.github.steveice10.opennbt.tag;
  */
 
 /**
- * The <code>TAG_Byte</code> tag.
+ * The <code>TAG_Byte_Array</code> tag.
  */
-public final class ByteTag extends Tag {
-
+public final class ByteArrayTag extends Tag {
+	
 	/**
 	 * The value.
 	 */
-	private final byte value;
+	private final byte[] value;
 	
 	/**
 	 * Creates the tag.
 	 * @param name The name.
 	 * @param value The value.
 	 */
-	public ByteTag(String name, byte value) {
+	public ByteArrayTag(String name, byte[] value) {
 		super(name);
 		this.value = value;
 	}
-
+	
 	@Override
-	public Byte getValue() {
+	public byte[] getValue() {
 		return value;
 	}
 	
 	@Override
 	public String toString() {
+		StringBuilder hex = new StringBuilder();
+		for(byte b : value) {
+			String hexDigits = Integer.toHexString(b).toUpperCase();
+			if(hexDigits.length() == 1) {
+				hex.append("0");
+			}
+			hex.append(hexDigits).append(" ");
+		}
 		String name = getName();
 		String append = "";
 		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-		return "TAG_Byte" + append + ": " + value;
+		return "TAG_Byte_Array" + append + ": " + hex.toString();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof ByteArrayTag)) return false;
+		
+		ByteArrayTag tag = (ByteArrayTag) obj;
+		
+		return Arrays.equals(this.getValue(), tag.getValue()) && this.getName().equals(tag.getName());
 	}
 	
 	public Tag clone() {
-		return new ByteTag(this.getName(), this.getValue());
+		byte[] clonedArray = NBTUtils.cloneByteArray(this.getValue());
+		
+		return new ByteArrayTag(this.getName(), clonedArray);
 	}
-	
+
 }

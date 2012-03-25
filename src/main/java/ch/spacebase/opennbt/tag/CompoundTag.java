@@ -1,4 +1,4 @@
-package com.github.steveice10.opennbt.tag;
+package ch.spacebase.opennbt.tag;
 
 /*
  * OpenNBT License
@@ -37,7 +37,7 @@ package com.github.steveice10.opennbt.tag;
 import java.util.Collections;
 import java.util.Map;
 
-import com.github.steveice10.opennbt.NBTUtils;
+import ch.spacebase.opennbt.NBTUtils;
 
 
 

@@ -1,4 +1,4 @@
-package com.github.steveice10.opennbt.tag;
+package ch.spacebase.opennbt.tag;
 
 /*
  * OpenNBT License
@@ -35,27 +35,27 @@ package com.github.steveice10.opennbt.tag;
  */
 
 /**
- * The <code>TAG_Double</code> tag.
+ * The <code>TAG_Float</code> tag.
  */
-public final class DoubleTag extends Tag {
-	
+public final class FloatTag extends Tag {
+
 	/**
 	 * The value.
 	 */
-	private final double value;
-
+	private final float value;
+	
 	/**
 	 * Creates the tag.
 	 * @param name The name.
 	 * @param value The value.
 	 */
-	public DoubleTag(String name, double value) {
+	public FloatTag(String name, float value) {
 		super(name);
 		this.value = value;
 	}
 	
 	@Override
-	public Double getValue() {
+	public Float getValue() {
 		return value;
 	}
 	
@@ -66,11 +66,11 @@ public final class DoubleTag extends Tag {
 		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-		return "TAG_Double" + append + ": " + value;
+		return "TAG_Float" + append + ": " + value;
 	}
 	
 	public Tag clone() {
-		return new DoubleTag(this.getName(), this.getValue());
+		return new FloatTag(this.getName(), this.getValue());
 	}
 
 }

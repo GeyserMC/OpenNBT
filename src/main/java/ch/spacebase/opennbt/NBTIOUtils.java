@@ -1,4 +1,4 @@
-package com.github.steveice10.opennbt;
+package ch.spacebase.opennbt;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.steveice10.opennbt.stream.NBTInputStream;
-import com.github.steveice10.opennbt.stream.NBTOutputStream;
-import com.github.steveice10.opennbt.tag.Tag;
+import ch.spacebase.opennbt.stream.NBTInputStream;
+import ch.spacebase.opennbt.stream.NBTOutputStream;
+import ch.spacebase.opennbt.tag.Tag;
 
 
 

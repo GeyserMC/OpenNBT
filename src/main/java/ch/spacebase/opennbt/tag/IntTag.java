@@ -1,4 +1,4 @@
-package com.github.steveice10.opennbt.tag;
+package ch.spacebase.opennbt.tag;
 
 /*
  * OpenNBT License
@@ -34,52 +34,28 @@ package com.github.steveice10.opennbt.tag;
  * POSSIBILITY OF SUCH DAMAGE. 
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import com.github.steveice10.opennbt.NBTUtils;
-
-
-
-
 /**
- * The <code>TAG_List</code> tag.
+ * The <code>TAG_Int</code> tag.
  */
-public final class ListTag<T extends Tag> extends Tag {
+public final class IntTag extends Tag {
 
-	/**
-	 * The type.
-	 */
-	private final Class<T> type;
-	
 	/**
 	 * The value.
 	 */
-	private final List<T> value;
+	private final int value;
 	
 	/**
 	 * Creates the tag.
 	 * @param name The name.
-	 * @param type The type of item in the list.
 	 * @param value The value.
 	 */
-	public ListTag(String name, Class<T> type, List<T> value) {
+	public IntTag(String name, int value) {
 		super(name);
-		this.type = type;
-		this.value = Collections.unmodifiableList(value);
+		this.value = value;
 	}
-	
-	/**
-	 * Gets the type of item in this list.
-	 * @return The type of item in this list.
-	 */
-	public Class<T> getType() {
-		return type;
-	}
-	
+
 	@Override
-	public List<T> getValue() {
+	public Integer getValue() {
 		return value;
 	}
 	
@@ -90,24 +66,11 @@ public final class ListTag<T extends Tag> extends Tag {
 		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-		StringBuilder bldr = new StringBuilder();
-		bldr.append("TAG_List" + append + ": " + value.size() + " entries of type " + NBTUtils.getTypeName(type) + "\r\n{\r\n");
-		for(Tag t : value) {
-			bldr.append("   " + t.toString().replaceAll("\r\n", "\r\n   ") + "\r\n");
-		}
-		bldr.append("}");
-		return bldr.toString();
+		return "TAG_Int" + append + ": " + value;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Tag clone() {
-		List<T> newList = new ArrayList<T>();
-		
-		for(T value : this.getValue()) {
-			newList.add((T) value.clone());
-		}
-		
-		return new ListTag<T>(this.getName(), this.getType(), newList);
+		return new IntTag(this.getName(), this.getValue());
 	}
 
 }

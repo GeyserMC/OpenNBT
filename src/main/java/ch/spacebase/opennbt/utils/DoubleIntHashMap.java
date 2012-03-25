@@ -1,4 +1,4 @@
-package com.github.steveice10.opennbt.utils;
+package ch.spacebase.opennbt.utils;
 
 import java.util.HashMap;
 

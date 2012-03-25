@@ -1,4 +1,4 @@
-package com.github.steveice10.opennbt.tag;
+package ch.spacebase.opennbt.tag;
 
 /*
  * OpenNBT License
@@ -35,46 +35,42 @@ package com.github.steveice10.opennbt.tag;
  */
 
 /**
- * Represents a single NBT tag.
+ * The <code>TAG_Short</code> tag.
  */
-public abstract class Tag implements Cloneable {
-	
+public final class ShortTag extends Tag {
+
 	/**
-	 * The name of this tag.
+	 * The value.
 	 */
-	private final String name;
+	private final short value;
 	
 	/**
-	 * Creates the tag with the specified name.
+	 * Creates the tag.
 	 * @param name The name.
+	 * @param value The value.
 	 */
-	public Tag(String name) {
-		this.name = name;
+	public ShortTag(String name, short value) {
+		super(name);
+		this.value = value;
 	}
-	
-	/**
-	 * Gets the name of this tag.
-	 * @return The name of this tag.
-	 */
-	public final String getName() {
-		return name;
-	}
-	
-	/**
-	 * Gets the value of this tag.
-	 * @return The value of this tag.
-	 */
-	public abstract Object getValue();
 	
 	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof Tag)) return false;
-		
-		Tag tag = (Tag) obj;
-		
-		return this.getValue().equals(tag.getValue()) && this.getName().equals(tag.getName());
+	public Short getValue() {
+		return value;
 	}
 	
-	public abstract Tag clone();
+	@Override
+	public String toString() {
+		String name = getName();
+		String append = "";
+		if(name != null && !name.equals("")) {
+			append = "(\"" + this.getName() + "\")";
+		}
+		return "TAG_Short" + append + ": " + value;
+	}
+	
+	public Tag clone() {
+		return new ShortTag(this.getName(), this.getValue());
+	}
 
 }

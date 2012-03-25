@@ -1,11 +1,4 @@
-package com.github.steveice10.opennbt.tag;
-
-import java.util.Arrays;
-
-import com.github.steveice10.opennbt.NBTUtils;
-
-
-
+package ch.spacebase.opennbt.tag;
 
 /*
  * OpenNBT License
@@ -24,7 +17,7 @@ import com.github.steveice10.opennbt.NBTUtils;
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
  *       
- *     * Neither the name of the OpenNBT team nor the names of its
+ *     * Neither the name of the JNBT team nor the names of its
  *       contributors may be used to endorse or promote products derived from
  *       this software without specific prior written permission.
  * 
@@ -41,62 +34,80 @@ import com.github.steveice10.opennbt.NBTUtils;
  * POSSIBILITY OF SUCH DAMAGE. 
  */
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import ch.spacebase.opennbt.NBTUtils;
+
+
+
+
 /**
- * The <code>TAG_Byte_Array</code> tag.
+ * The <code>TAG_List</code> tag.
  */
-public final class ByteArrayTag extends Tag {
+public final class ListTag<T extends Tag> extends Tag {
+
+	/**
+	 * The type.
+	 */
+	private final Class<T> type;
 	
 	/**
 	 * The value.
 	 */
-	private final byte[] value;
+	private final List<T> value;
 	
 	/**
 	 * Creates the tag.
 	 * @param name The name.
+	 * @param type The type of item in the list.
 	 * @param value The value.
 	 */
-	public ByteArrayTag(String name, byte[] value) {
+	public ListTag(String name, Class<T> type, List<T> value) {
 		super(name);
-		this.value = value;
+		this.type = type;
+		this.value = Collections.unmodifiableList(value);
+	}
+	
+	/**
+	 * Gets the type of item in this list.
+	 * @return The type of item in this list.
+	 */
+	public Class<T> getType() {
+		return type;
 	}
 	
 	@Override
-	public byte[] getValue() {
+	public List<T> getValue() {
 		return value;
 	}
 	
 	@Override
 	public String toString() {
-		StringBuilder hex = new StringBuilder();
-		for(byte b : value) {
-			String hexDigits = Integer.toHexString(b).toUpperCase();
-			if(hexDigits.length() == 1) {
-				hex.append("0");
-			}
-			hex.append(hexDigits).append(" ");
-		}
 		String name = getName();
 		String append = "";
 		if(name != null && !name.equals("")) {
 			append = "(\"" + this.getName() + "\")";
 		}
-		return "TAG_Byte_Array" + append + ": " + hex.toString();
+		StringBuilder bldr = new StringBuilder();
+		bldr.append("TAG_List" + append + ": " + value.size() + " entries of type " + NBTUtils.getTypeName(type) + "\r\n{\r\n");
+		for(Tag t : value) {
+			bldr.append("   " + t.toString().replaceAll("\r\n", "\r\n   ") + "\r\n");
+		}
+		bldr.append("}");
+		return bldr.toString();
 	}
 	
-	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof ByteArrayTag)) return false;
-		
-		ByteArrayTag tag = (ByteArrayTag) obj;
-		
-		return Arrays.equals(this.getValue(), tag.getValue()) && this.getName().equals(tag.getName());
-	}
-	
+	@SuppressWarnings("unchecked")
 	public Tag clone() {
-		byte[] clonedArray = NBTUtils.cloneByteArray(this.getValue());
+		List<T> newList = new ArrayList<T>();
 		
-		return new ByteArrayTag(this.getName(), clonedArray);
+		for(T value : this.getValue()) {
+			newList.add((T) value.clone());
+		}
+		
+		return new ListTag<T>(this.getName(), this.getType(), newList);
 	}
 
 }

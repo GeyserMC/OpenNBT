@@ -1,7 +1,7 @@
-package com.github.steveice10.opennbt.tag;
+package ch.spacebase.opennbt.tag;
 
-import com.github.steveice10.opennbt.NBTUtils;
-import com.github.steveice10.opennbt.tag.Tag;
+import ch.spacebase.opennbt.NBTUtils;
+import ch.spacebase.opennbt.tag.Tag;
 
 /*
  * OpenNBT License

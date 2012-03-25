@@ -1,24 +1,24 @@
-package com.github.steveice10.opennbt;
+package ch.spacebase.opennbt;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 
-import com.github.steveice10.opennbt.exception.InvalidNBTException;
-import com.github.steveice10.opennbt.tag.ByteArrayTag;
-import com.github.steveice10.opennbt.tag.ByteTag;
-import com.github.steveice10.opennbt.tag.CompoundTag;
-import com.github.steveice10.opennbt.tag.DoubleTag;
-import com.github.steveice10.opennbt.tag.EndTag;
-import com.github.steveice10.opennbt.tag.FloatTag;
-import com.github.steveice10.opennbt.tag.IntArrayTag;
-import com.github.steveice10.opennbt.tag.IntTag;
-import com.github.steveice10.opennbt.tag.ListTag;
-import com.github.steveice10.opennbt.tag.LongTag;
-import com.github.steveice10.opennbt.tag.ShortTag;
-import com.github.steveice10.opennbt.tag.StringTag;
-import com.github.steveice10.opennbt.tag.Tag;
+import ch.spacebase.opennbt.exception.InvalidNBTException;
+import ch.spacebase.opennbt.tag.ByteArrayTag;
+import ch.spacebase.opennbt.tag.ByteTag;
+import ch.spacebase.opennbt.tag.CompoundTag;
+import ch.spacebase.opennbt.tag.DoubleTag;
+import ch.spacebase.opennbt.tag.EndTag;
+import ch.spacebase.opennbt.tag.FloatTag;
+import ch.spacebase.opennbt.tag.IntArrayTag;
+import ch.spacebase.opennbt.tag.IntTag;
+import ch.spacebase.opennbt.tag.ListTag;
+import ch.spacebase.opennbt.tag.LongTag;
+import ch.spacebase.opennbt.tag.ShortTag;
+import ch.spacebase.opennbt.tag.StringTag;
+import ch.spacebase.opennbt.tag.Tag;
 
 
 

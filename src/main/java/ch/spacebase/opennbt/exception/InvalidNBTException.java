@@ -1,4 +1,4 @@
-package com.github.steveice10.opennbt.exception;
+package ch.spacebase.opennbt.exception;
 
 import java.io.IOException;
 

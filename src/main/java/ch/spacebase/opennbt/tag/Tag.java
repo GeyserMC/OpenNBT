@@ -1,4 +1,4 @@
-package com.github.steveice10.opennbt.tag;
+package ch.spacebase.opennbt.tag;
 
 /*
  * OpenNBT License
@@ -35,29 +35,46 @@ package com.github.steveice10.opennbt.tag;
  */
 
 /**
- * The <code>TAG_End</code> tag.
+ * Represents a single NBT tag.
  */
-public final class EndTag extends Tag {
-
+public abstract class Tag implements Cloneable {
+	
 	/**
-	 * Creates the tag.
+	 * The name of this tag.
 	 */
-	public EndTag() {
-		super("");
-	}
-
-	@Override
-	public Object getValue() {
-		return null;
+	private final String name;
+	
+	/**
+	 * Creates the tag with the specified name.
+	 * @param name The name.
+	 */
+	public Tag(String name) {
+		this.name = name;
 	}
 	
-	@Override
-	public String toString() {
-		return "TAG_End";
+	/**
+	 * Gets the name of this tag.
+	 * @return The name of this tag.
+	 */
+	public final String getName() {
+		return name;
 	}
 	
-	public Tag clone() {
-		return new EndTag();
+	/**
+	 * Gets the value of this tag.
+	 * @return The value of this tag.
+	 */
+	public abstract Object getValue();
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Tag)) return false;
+		
+		Tag tag = (Tag) obj;
+		
+		return this.getValue().equals(tag.getValue()) && this.getName().equals(tag.getName());
 	}
+	
+	public abstract Tag clone();
 
 }
