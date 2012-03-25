@@ -34,13 +34,12 @@ package ch.spacebase.opennbt.tag;
  * POSSIBILITY OF SUCH DAMAGE. 
  */
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import ch.spacebase.opennbt.NBTUtils;
-
-
-
 
 /**
  * The <code>TAG_Compound</code> tag.
@@ -65,6 +64,22 @@ public final class CompoundTag extends Tag {
 	@Override
 	public Map<String, Tag> getValue() {
 		return value;
+	}
+	
+	public Tag get(String tagName) {
+		return this.value.get(tagName);
+	}
+	
+	public Set<String> keySet() {
+		return this.value.keySet();
+	}
+	
+	public Collection<Tag> values() {
+		return this.value.values();
+	}
+	
+	public int size() {
+		return this.value.size();
 	}
 	
 	@Override

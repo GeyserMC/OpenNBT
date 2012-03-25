@@ -4,7 +4,6 @@ import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
 import ch.spacebase.opennbt.NBTConstants;
@@ -182,7 +181,7 @@ public final class NBTOutputStream implements Closeable {
 	 * @throws IOException if an I/O error occurs.
 	 */
 	private void writeCompoundTagPayload(CompoundTag tag) throws IOException {
-		for(Tag childTag : tag.getValue().values()) {
+		for(Tag childTag : tag.values()) {
 			writeTag(childTag);
 		}
 		os.writeByte((byte) 0); // end tag - better way?
@@ -193,16 +192,14 @@ public final class NBTOutputStream implements Closeable {
 	 * @param tag The tag.
 	 * @throws IOException if an I/O error occurs.
 	 */
-	@SuppressWarnings("unchecked")
 	private void writeListTagPayload(ListTag<?> tag) throws IOException {
 		Class<? extends Tag> clazz = tag.getType();
-		List<Tag> tags = (List<Tag>) tag.getValue();
-		int size = tags.size();
+		int size = tag.size();
 		
 		os.writeByte(NBTUtils.getTypeCode(clazz));
 		os.writeInt(size);
-		for(int i = 0; i < size; i++) {
-			writeTagPayload(tags.get(i));
+		for(Tag t : tag.getValue()) {
+			this.writeTagPayload(t);
 		}
 	}
 

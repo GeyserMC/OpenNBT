@@ -36,6 +36,7 @@ package ch.spacebase.opennbt.tag;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import ch.spacebase.opennbt.NBTUtils;
@@ -46,7 +47,7 @@ import ch.spacebase.opennbt.NBTUtils;
 /**
  * The <code>TAG_List</code> tag.
  */
-public final class ListTag<T extends Tag> extends Tag {
+public final class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 
 	/**
 	 * The type.
@@ -81,6 +82,18 @@ public final class ListTag<T extends Tag> extends Tag {
 	@Override
 	public List<T> getValue() {
 		return value;
+	}
+	
+	public T get(int index) {
+		return this.value.get(index);
+	}
+	
+	public Iterator<T> iterator() {
+		return this.value.iterator();
+	}
+	
+	public int size() {
+		return this.value.size();
 	}
 	
 	@Override
