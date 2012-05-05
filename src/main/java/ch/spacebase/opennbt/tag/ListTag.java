@@ -63,6 +63,15 @@ public final class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 	 * Creates the tag.
 	 * @param name The name.
 	 * @param type The type of item in the list.
+	 */
+	public ListTag(String name, Class<T> type) {
+		this(name, type, new ArrayList<T>());
+	}
+	
+	/**
+	 * Creates the tag.
+	 * @param name The name.
+	 * @param type The type of item in the list.
 	 * @param value The value.
 	 */
 	public ListTag(String name, Class<T> type, List<T> value) {
@@ -82,6 +91,14 @@ public final class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 	@Override
 	public List<T> getValue() {
 		return value;
+	}
+	
+	public boolean add(T value) {
+		return this.value.add(value);
+	}
+	
+	public boolean remove(T value) {
+		return this.value.remove(value);
 	}
 	
 	public T get(int index) {
