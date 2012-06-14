@@ -35,7 +35,6 @@ package ch.spacebase.opennbt.tag;
  */
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -67,12 +66,12 @@ public final class CompoundTag extends Tag {
 	 */
 	public CompoundTag(String name, Map<String, Tag> value) {
 		super(name);
-		this.value = Collections.unmodifiableMap(value);
+		this.value = value;
 	}
 
 	@Override
 	public Map<String, Tag> getValue() {
-		return value;
+		return new HashMap<String, Tag>(value);
 	}
 	
 	public Tag get(String tagName) {
@@ -97,6 +96,10 @@ public final class CompoundTag extends Tag {
 	
 	public int size() {
 		return this.value.size();
+	}
+	
+	public void clear() {
+		this.value.clear();
 	}
 	
 	@Override

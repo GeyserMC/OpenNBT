@@ -242,7 +242,7 @@ public final class NBTOutputStream implements Closeable {
 	 * @throws IOException if an I/O error occurs.
 	 */
 	private void writeStringTagPayload(StringTag tag) throws IOException {
-		byte[] bytes = tag.getValue().getBytes(NBTConstants.CHARSET);
+		byte[] bytes = tag.getValue() != null ? tag.getValue().getBytes(NBTConstants.CHARSET) : new byte[0];
 		os.writeShort(bytes.length);
 		os.write(bytes);
 	}

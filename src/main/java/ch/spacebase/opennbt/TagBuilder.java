@@ -9,20 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import ch.spacebase.opennbt.stream.NBTOutputStream;
-import ch.spacebase.opennbt.tag.ByteArrayTag;
-import ch.spacebase.opennbt.tag.ByteTag;
-import ch.spacebase.opennbt.tag.CompoundTag;
-import ch.spacebase.opennbt.tag.DoubleTag;
-import ch.spacebase.opennbt.tag.EndTag;
-import ch.spacebase.opennbt.tag.FloatTag;
-import ch.spacebase.opennbt.tag.IntArrayTag;
-import ch.spacebase.opennbt.tag.IntTag;
-import ch.spacebase.opennbt.tag.ListTag;
-import ch.spacebase.opennbt.tag.LongTag;
-import ch.spacebase.opennbt.tag.ShortTag;
-import ch.spacebase.opennbt.tag.StringTag;
-import ch.spacebase.opennbt.tag.Tag;
-
+import ch.spacebase.opennbt.tag.*;
+import ch.spacebase.opennbt.tag.custom.*;
 
 public class TagBuilder {
 
@@ -57,6 +45,11 @@ public class TagBuilder {
 		return this;
 	}
 	
+	public TagBuilder append(String name, double d[]) {
+		this.tags.add(new DoubleArrayTag(name, d));
+		return this;
+	}
+	
 	public TagBuilder append(EndTag tag) {
 		this.tags.add(tag);
 		return this;
@@ -64,6 +57,11 @@ public class TagBuilder {
 	
 	public TagBuilder append(String name, float f) {
 		this.tags.add(new FloatTag(name, f));
+		return this;
+	}
+	
+	public TagBuilder append(String name, float f[]) {
+		this.tags.add(new FloatArrayTag(name, f));
 		return this;
 	}
 	
@@ -87,13 +85,38 @@ public class TagBuilder {
 		return this;
 	}
 	
+	public TagBuilder append(String name, long l[]) {
+		this.tags.add(new LongArrayTag(name, l));
+		return this;
+	}
+	
 	public TagBuilder append(String name, short s) {
 		this.tags.add(new ShortTag(name, s));
 		return this;
 	}
 	
+	public TagBuilder append(String name, short s[]) {
+		this.tags.add(new ShortArrayTag(name, s));
+		return this;
+	}
+	
 	public TagBuilder append(String name, String s) {
 		this.tags.add(new StringTag(name, s));
+		return this;
+	}
+	
+	public TagBuilder append(String name, String s[]) {
+		this.tags.add(new StringArrayTag(name, s));
+		return this;
+	}
+	
+	public TagBuilder append(String name, Object o) {
+		this.tags.add(new ObjectTag(name, o));
+		return this;
+	}
+	
+	public TagBuilder append(String name, Object o[]) {
+		this.tags.add(new ObjectArrayTag(name, o));
 		return this;
 	}
 	
