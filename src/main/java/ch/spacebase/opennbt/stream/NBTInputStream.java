@@ -267,6 +267,7 @@ public final class NBTInputStream implements Closeable {
         	
         	return new ObjectTag(name, o);
         case NBTConstants.TYPE_SHORT_ARRAY:
+        	long time = System.currentTimeMillis();
             length = is.readInt();
             short[] shorts = new short[length];
             
@@ -274,6 +275,7 @@ public final class NBTInputStream implements Closeable {
             	shorts[i] = is.readShort();
             }
 
+            System.out.println("Took " + (System.currentTimeMillis() - time) + "ms to read a short array.");
             return new ShortArrayTag(name, shorts);
         case NBTConstants.TYPE_STRING_ARRAY:
         	length = is.readInt();
