@@ -6,7 +6,7 @@
 	<packaging>jar</packaging>
 
 	<name>OpenNBT</name>
-	<description>An continuation of Graham Edgecombe's jNBT library.</description>
+	<description>A continuation of Graham Edgecombe's jNBT library.</description>
 	<url>http://github.com/Steveice10/OpenNBT/</url>
 
 	<licenses>
@@ -18,7 +18,7 @@
 	</licenses>
 
 	<scm>
-    		<connection>scm:git:git@github.com:Steveice10/OpenNBT.git</connection>
+    	<connection>scm:git:git@github.com:Steveice10/OpenNBT.git</connection>
 		<developerConnection>scm:git:git@github.com:Steveice10/OpenNBT.git</developerConnection>
 		<url>http://github.com/Steveice10/OpenNBT/</url>
 	</scm>
@@ -31,12 +31,18 @@
     		</developer>
   	</developers>
 
-        <distributionManagement>        
-                <repository>            
-                        <id>dropbox</id>                        
-                        <url>file:///home/steven/Dropbox/Public/maven</url>                      
-                </repository>           
-        </distributionManagement> 
+	<distributionManagement>
+		<repository>
+			<id>Spacebase Artifactory</id>
+			<name>Spacebase Artifactory-releases</name>
+			<url>http://repo.spacebase.ch/artifactory/main</url>
+		</repository>
+		<snapshotRepository>
+			<id>Spacebase Artifactory</id>
+			<name>Spacebase Artifactory-snapshots</name>
+			<url>http://repo.spacebase.ch/artifactory/main</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
