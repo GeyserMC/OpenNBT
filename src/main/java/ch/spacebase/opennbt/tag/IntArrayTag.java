@@ -1,109 +1,101 @@
 package ch.spacebase.opennbt.tag;
 
-import java.util.Arrays;
-
-import ch.spacebase.opennbt.tag.Tag;
-
-/*
- * OpenNBT License
- * 
- * JNBT Copyright (c) 2010 Graham Edgecombe
- * OpenNBT Copyright(c) 2012 Steveice10
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * 
- *     * Redistributions of source code must retain the above copyright notice,
- *       this list of conditions and the following disclaimer.
- *       
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *       
- *     * Neither the name of the JNBT team nor the names of its
- *       contributors may be used to endorse or promote products derived from
- *       this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE. 
- */
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
- * The <code>TAG_Int_Array</code> tag.
+ * A tag containing an integer array.
  */
-public final class IntArrayTag extends Tag {
+public class IntArrayTag extends Tag {
 
+	private int[] value;
+	
 	/**
-	 * The value.
+	 * Creates a tag with the specified name.
+	 * @param name The name of the tag.
 	 */
-	private final int[] value;
-
+	public IntArrayTag(String name) {
+		this(name, new int[0]);
+	}
+	
 	/**
-	 * Creates the tag.
-	 * 
-	 * @param name
-	 *            The name.
-	 * @param value
-	 *            The value.
+	 * Creates a tag with the specified name.
+	 * @param name The name of the tag.
+	 * @param value The value of the tag.
 	 */
 	public IntArrayTag(String name, int[] value) {
 		super(name);
 		this.value = value;
 	}
-
+	
 	@Override
 	public int[] getValue() {
-		return value;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder hex = new StringBuilder();
-
-		for (int curr : value) {
-			String hexDigits = Integer.toHexString(curr).toUpperCase();
-
-			if (hexDigits.length() == 1) {
-				hex.append("0");
-			}
-
-			hex.append(hexDigits).append(" ");
-		}
-
-		String name = getName();
-		String append = "";
-
-		if (name != null && !name.equals("")) {
-			append = "(\"" + this.getName() + "\")";
-		}
-
-		return "TAG_Int_Array" + append + ": " + hex.toString();
+		return this.value.clone();
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof IntArrayTag)) return false;
-		
-		IntArrayTag tag = (IntArrayTag) obj;
-		
-		return Arrays.equals(this.getValue(), tag.getValue()) && this.getName().equals(tag.getName());
+	public int getId() {
+		return 11;
+	}
+	
+	@Override
+	public void read(DataInputStream in) throws IOException {
+		this.value = new int[in.readInt()];
+    	for(int index = 0; index < this.value.length; index++) {
+        	this.value[index] = in.readInt();
+        }
 	}
 
 	@Override
+	public void write(DataOutputStream out) throws IOException {
+		out.writeInt(this.value.length);
+		for(int index = 0; index < this.value.length; index++) {
+			out.writeInt(this.value[index]);
+		}
+	}
+	
+	/**
+	 * Sets the value of this tag.
+	 * @param value New value of this tag.
+	 */
+	public void setValue(int[] value) {
+		if(value == null) {
+			return;
+		}
+		
+		this.value = value.clone();
+	}
+	
+	/**
+	 * Gets a value in this tag's array.
+	 * @param index Index of the value.
+	 * @return The value at the given index.
+	 */
+	public int getValue(int index) {
+		return this.value[index];
+	}
+	
+	/**
+	 * Sets a value in this tag's array.
+	 * @param index Index of the value.
+	 * @param value Value to set.
+	 */
+	public void setValue(int index, int value) {
+		this.value[index] = value;
+	}
+	
+	/**
+	 * Gets the length of this tag's array.
+	 * @return This tag's array length.
+	 */
+	public int length() {
+		return this.value.length;
+	}
+	
+	@Override
 	public IntArrayTag clone() {
-		int[] clonedArray = this.getValue().clone();
-
-		return new IntArrayTag(this.getName(), clonedArray);
+		return new IntArrayTag(this.getName(), this.getValue());
 	}
 
 }

@@ -1,97 +1,103 @@
 package ch.spacebase.opennbt.tag.custom;
 
-import java.util.Arrays;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 import ch.spacebase.opennbt.tag.Tag;
 
-/*
- * OpenNBT License
- * 
- * JNBT Copyright (c) 2010 Graham Edgecombe
- * OpenNBT Copyright(c) 2012 Steveice10
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * 
- *     * Redistributions of source code must retain the above copyright notice,
- *       this list of conditions and the following disclaimer.
- *       
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *       
- *     * Neither the name of the JNBT team nor the names of its
- *       contributors may be used to endorse or promote products derived from
- *       this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE. 
- */
-
 /**
- * The <code>TAG_Float_Array</code> tag.
+ * A tag containing a float array.
  */
-public final class FloatArrayTag extends Tag {
+public class FloatArrayTag extends Tag {
 
+	private float[] value;
+	
 	/**
-	 * The value.
+	 * Creates a tag with the specified name.
+	 * @param name The name of the tag.
 	 */
-	private final float[] value;
-
+	public FloatArrayTag(String name) {
+		this(name, new float[0]);
+	}
+	
 	/**
-	 * Creates the tag.
-	 * 
-	 * @param name
-	 *            The name.
-	 * @param value
-	 *            The value.
+	 * Creates a tag with the specified name.
+	 * @param name The name of the tag.
+	 * @param value The value of the tag.
 	 */
 	public FloatArrayTag(String name, float[] value) {
 		super(name);
 		this.value = value;
 	}
-
+	
 	@Override
 	public float[] getValue() {
-		return value;
+		return this.value.clone();
 	}
-
-	@Override
-	public String toString() {
-		String name = getName();
-		String append = "";
-
-		if (name != null && !name.equals("")) {
-			append = "(\"" + this.getName() + "\")";
+	
+	/**
+	 * Sets the value of this tag.
+	 * @param value New value of this tag.
+	 */
+	public void setValue(float[] value) {
+		if(value == null) {
+			return;
 		}
-
-		return "TAG_Float_Array" + append + ": " + Arrays.toString(value);
+		
+		this.value = value.clone();
+	}
+	
+	/**
+	 * Gets a value in this tag's array.
+	 * @param index Index of the value.
+	 * @return The value at the given index.
+	 */
+	public float getValue(int index) {
+		return this.value[index];
+	}
+	
+	/**
+	 * Sets a value in this tag's array.
+	 * @param index Index of the value.
+	 * @param value Value to set.
+	 */
+	public void setValue(int index, float value) {
+		this.value[index] = value;
+	}
+	
+	/**
+	 * Gets the length of this tag's array.
+	 * @return This tag's array length.
+	 */
+	public int length() {
+		return this.value.length;
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof FloatArrayTag)) return false;
-		
-		FloatArrayTag tag = (FloatArrayTag) obj;
-		
-		return Arrays.equals(this.getValue(), tag.getValue()) && this.getName().equals(tag.getName());
+	public int getId() {
+		return 61;
 	}
 
 	@Override
-	public FloatArrayTag clone() {
-		float[] clonedArray = this.getValue().clone();
+	public void read(DataInputStream in) throws IOException {
+		this.value = new float[in.readInt()];
+    	for(int index = 0; index < this.value.length; index++) {
+        	this.value[index] = in.readFloat();
+        }
+	}
 
-		return new FloatArrayTag(this.getName(), clonedArray);
+	@Override
+	public void write(DataOutputStream out) throws IOException {
+		out.writeInt(this.value.length);
+		for(int index = 0; index < this.value.length; index++) {
+			out.writeFloat(this.value[index]);
+		}
+	}
+	
+	@Override
+	public FloatArrayTag clone() {
+		return new FloatArrayTag(this.getName(), this.getValue());
 	}
 
 }

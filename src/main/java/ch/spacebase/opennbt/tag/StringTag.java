@@ -1,53 +1,30 @@
 package ch.spacebase.opennbt.tag;
 
-/*
- * OpenNBT License
- * 
- * JNBT Copyright (c) 2010 Graham Edgecombe
- * OpenNBT Copyright(c) 2012 Steveice10
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * 
- *     * Redistributions of source code must retain the above copyright notice,
- *       this list of conditions and the following disclaimer.
- *       
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *       
- *     * Neither the name of the JNBT team nor the names of its
- *       contributors may be used to endorse or promote products derived from
- *       this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE. 
- */
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import ch.spacebase.opennbt.NBTIO;
 
 /**
- * The <code>TAG_String</code> tag.
+ * A tag containing a string.
  */
-public final class StringTag extends Tag {
-
-	/**
-	 * The value.
-	 */
-	private final String value;
+public class StringTag extends Tag {
+	
+	private String value;
 	
 	/**
-	 * Creates the tag.
-	 * @param name The name.
-	 * @param value The value.
+	 * Creates a tag with the specified name.
+	 * @param name The name of the tag.
+	 */
+	public StringTag(String name) {
+		this(name, "");
+	}
+	
+	/**
+	 * Creates a tag with the specified name.
+	 * @param name The name of the tag.
+	 * @param value The value of the tag.
 	 */
 	public StringTag(String name, String value) {
 		super(name);
@@ -56,19 +33,37 @@ public final class StringTag extends Tag {
 	
 	@Override
 	public String getValue() {
-		return value;
+		return this.value;
+	}
+	
+	/**
+	 * Sets the value of this tag.
+	 * @param value New value of this tag.
+	 */
+	public void setValue(String value) {
+		this.value = value;
 	}
 	
 	@Override
-	public String toString() {
-		String name = getName();
-		String append = "";
-		if(name != null && !name.equals("")) {
-			append = "(\"" + this.getName() + "\")";
-		}
-		return "TAG_String" + append + ": " + value;
+	public int getId() {
+		return 8;
 	}
 	
+	@Override
+	public void read(DataInputStream in) throws IOException {
+		byte[] bytes = new byte[in.readShort()];
+		in.readFully(bytes);
+		this.value = new String(bytes, NBTIO.CHARSET);
+	}
+
+	@Override
+	public void write(DataOutputStream out) throws IOException {
+    	byte[] bytes = this.value.getBytes(NBTIO.CHARSET);
+		out.writeShort(bytes.length);
+		out.write(bytes);
+	}
+	
+	@Override
 	public StringTag clone() {
 		return new StringTag(this.getName(), this.getValue());
 	}

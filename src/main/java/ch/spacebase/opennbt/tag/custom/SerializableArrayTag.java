@@ -3,22 +3,25 @@ package ch.spacebase.opennbt.tag.custom;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import ch.spacebase.opennbt.tag.Tag;
 
 /**
- * A tag containing a long array.
+ * A tag containing an array of serializable objects.
  */
-public class LongArrayTag extends Tag {
+public class SerializableArrayTag extends Tag {
 
-	private long[] value;
+	private Serializable[] value;
 	
 	/**
 	 * Creates a tag with the specified name.
 	 * @param name The name of the tag.
 	 */
-	public LongArrayTag(String name) {
-		this(name, new long[0]);
+	public SerializableArrayTag(String name) {
+		this(name, new Serializable[0]);
 	}
 	
 	/**
@@ -26,13 +29,13 @@ public class LongArrayTag extends Tag {
 	 * @param name The name of the tag.
 	 * @param value The value of the tag.
 	 */
-	public LongArrayTag(String name, long[] value) {
+	public SerializableArrayTag(String name, Serializable[] value) {
 		super(name);
 		this.value = value;
 	}
 	
 	@Override
-	public long[] getValue() {
+	public Serializable[] getValue() {
 		return this.value.clone();
 	}
 	
@@ -40,7 +43,7 @@ public class LongArrayTag extends Tag {
 	 * Sets the value of this tag.
 	 * @param value New value of this tag.
 	 */
-	public void setValue(long[] value) {
+	public void setValue(Serializable[] value) {
 		if(value == null) {
 			return;
 		}
@@ -53,7 +56,7 @@ public class LongArrayTag extends Tag {
 	 * @param index Index of the value.
 	 * @return The value at the given index.
 	 */
-	public long getValue(int index) {
+	public Serializable getValue(int index) {
 		return this.value[index];
 	}
 	
@@ -62,7 +65,7 @@ public class LongArrayTag extends Tag {
 	 * @param index Index of the value.
 	 * @param value Value to set.
 	 */
-	public void setValue(int index, long value) {
+	public void setValue(int index, Serializable value) {
 		this.value[index] = value;
 	}
 	
@@ -76,28 +79,34 @@ public class LongArrayTag extends Tag {
 	
 	@Override
 	public int getId() {
-		return 62;
+		return 63;
 	}
-
+	
 	@Override
 	public void read(DataInputStream in) throws IOException {
-		this.value = new long[in.readInt()];
+    	this.value = new Serializable[in.readInt()];
+    	ObjectInputStream str = new ObjectInputStream(in);
     	for(int index = 0; index < this.value.length; index++) {
-        	this.value[index] = in.readLong();
-        }
+        	try {
+				this.value[index] = (Serializable) str.readObject();
+			} catch (ClassNotFoundException e) {
+				throw new IOException("Class not found while reading SerializableArrayTag!", e);
+			}
+    	}
 	}
 
 	@Override
 	public void write(DataOutputStream out) throws IOException {
-		out.writeInt(this.value.length);
-		for(int index = 0; index < this.value.length; index++) {
-			out.writeLong(this.value[index]);
-		}
+        out.writeInt(this.value.length);
+        ObjectOutputStream str = new ObjectOutputStream(out);
+        for(int index = 0; index < this.value.length; index++) {
+            str.writeObject(this.value[index]);
+        }
 	}
 	
 	@Override
-	public LongArrayTag clone() {
-		return new LongArrayTag(this.getName(), this.getValue());
+	public SerializableArrayTag clone() {
+		return new SerializableArrayTag(this.getName(), this.getValue());
 	}
 
 }

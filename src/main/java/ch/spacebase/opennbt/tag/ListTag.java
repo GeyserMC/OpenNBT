@@ -1,74 +1,45 @@
 package ch.spacebase.opennbt.tag;
 
-/*
- * OpenNBT License
- * 
- * JNBT Copyright (c) 2010 Graham Edgecombe
- * OpenNBT Copyright(c) 2012 Steveice10
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * 
- *     * Redistributions of source code must retain the above copyright notice,
- *       this list of conditions and the following disclaimer.
- *       
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *       
- *     * Neither the name of the JNBT team nor the names of its
- *       contributors may be used to endorse or promote products derived from
- *       this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE. 
- */
-
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import ch.spacebase.opennbt.NBTUtils;
+import ch.spacebase.opennbt.TagRegistry;
 
 /**
- * The <code>TAG_List</code> tag.
+ * A tag containing a list of tags.
  */
-public final class ListTag<T extends Tag> extends Tag implements Iterable<T> {
+public class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 
-	/**
-	 * The type.
-	 */
-	private final Class<T> type;
+	private Class<T> type;
+	private List<T> value;
 	
 	/**
-	 * The value.
+	 * Creates a tag with the specified name.
+	 * @param name The name of the tag.
 	 */
-	private final List<T> value;
+	public ListTag(String name) {
+		super(name);
+		this.value = new ArrayList<T>();
+	}
 	
 	/**
-	 * Creates the tag.
-	 * @param name The name.
-	 * @param type The type of item in the list.
+	 * Creates a tag with the specified name.
+	 * @param name The name of the tag.
+	 * @param type Tag type of the list.
 	 */
 	public ListTag(String name, Class<T> type) {
 		this(name, type, new ArrayList<T>());
 	}
 	
 	/**
-	 * Creates the tag.
-	 * @param name The name.
-	 * @param type The type of item in the list.
-	 * @param value The value.
+	 * Creates a tag with the specified name.
+	 * @param name The name of the tag.
+	 * @param type Tag type of the list.
+	 * @param value The value of the tag.
 	 */
 	public ListTag(String name, Class<T> type, List<T> value) {
 		super(name);
@@ -76,64 +47,99 @@ public final class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 		this.value = value;
 	}
 	
-	/**
-	 * Gets the type of item in this list.
-	 * @return The type of item in this list.
-	 */
-	public Class<T> getType() {
-		return type;
-	}
-	
 	@Override
 	public List<T> getValue() {
-		return new ArrayList<T>(value);
+		return new ArrayList<T>(this.value);
 	}
 	
-	public boolean add(T value) {
-		return this.value.add(value);
+	/**
+	 * Adds a tag to this list tag.
+	 * @param tag Tag to add.
+	 * @return If the list was changed as a result.
+	 */
+	public boolean add(T tag) {
+		return this.value.add(tag);
 	}
 	
-	public boolean remove(T value) {
-		return this.value.remove(value);
+	/**
+	 * Removes a tag from this list tag.
+	 * @param tag Tag to remove.
+	 * @return If the list contained the tag.
+	 */
+	public boolean remove(T tag) {
+		return this.value.remove(tag);
 	}
 	
+	/**
+	 * Gets the tag at the given index of this list tag.
+	 * @param index Index of the tag.
+	 * @return The tag at the given index.
+	 */
 	public T get(int index) {
 		return this.value.get(index);
 	}
 	
-	public Iterator<T> iterator() {
-		return this.value.iterator();
-	}
-	
+	/**
+	 * Gets the number of tags in this list tag.
+	 * @return The size of this list tag.
+	 */
 	public int size() {
 		return this.value.size();
 	}
 	
 	@Override
-	public String toString() {
-		String name = getName();
-		String append = "";
-		if(name != null && !name.equals("")) {
-			append = "(\"" + this.getName() + "\")";
+	public Iterator<T> iterator() {
+		return this.value.iterator();
+	}
+	
+	@Override
+	public int getId() {
+		return 9;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void read(DataInputStream in) throws IOException {
+		int id = in.readByte() & 0xFF;
+		this.type = (Class<T>) TagRegistry.getClassFor(id);
+		if(this.type == null) {
+			throw new IOException("Unknown tag ID in ListTag: " + id);
 		}
-		StringBuilder bldr = new StringBuilder();
-		bldr.append("TAG_List" + append + ": " + value.size() + " entries of type " + NBTUtils.getTypeName(type) + "\r\n{\r\n");
-		for(Tag t : value) {
-			bldr.append("   " + t.toString().replaceAll("\r\n", "\r\n   ") + "\r\n");
+		
+		int count = in.readInt();
+		for(int index = 0; index < count; index++) {
+			Tag tag = TagRegistry.createInstance(id, "");
+			if(tag == null) {
+				throw new IOException("Tag could not be created: \"" + this.type.getSimpleName() + "\" (" + id + ")");
+			}
+			
+			tag.read(in);
+			this.add((T) tag);
 		}
-		bldr.append("}");
-		return bldr.toString();
+	}
+
+	@Override
+	public void write(DataOutputStream out) throws IOException {
+		int id = TagRegistry.getIdFor(this.type);
+		if(id == -1) {
+			throw new IOException("ListTag contains unregistered tag class.");
+		}
+		
+		out.writeByte(id);
+		out.writeInt(this.value.size());
+		for(Tag tag : this.value) {
+			tag.write(out);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	public ListTag<T> clone() {
 		List<T> newList = new ArrayList<T>();
-		
-		for(T value : this.getValue()) {
+		for(T value : this.value) {
 			newList.add((T) value.clone());
 		}
 		
-		return new ListTag<T>(this.getName(), this.getType(), newList);
+		return new ListTag<T>(this.getName(), this.type, newList);
 	}
 
 }

@@ -1,126 +1,131 @@
 package ch.spacebase.opennbt.tag;
 
-/*
- * OpenNBT License
- * 
- * JNBT Copyright (c) 2010 Graham Edgecombe
- * OpenNBT Copyright(c) 2012 Steveice10
- * All rights reserved.
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * 
- *     * Redistributions of source code must retain the above copyright notice,
- *       this list of conditions and the following disclaimer.
- *       
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *       
- *     * Neither the name of the JNBT team nor the names of its
- *       contributors may be used to endorse or promote products derived from
- *       this software without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE. 
- */
-
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
-import ch.spacebase.opennbt.NBTUtils;
+import ch.spacebase.opennbt.NBTIO;
 
 /**
- * The <code>TAG_Compound</code> tag.
+ * A compound tag containing other tags.
  */
-public final class CompoundTag extends Tag {
+public class CompoundTag extends Tag {
+
+	private Map<String, Tag> value;
 	
 	/**
-	 * The value.
-	 */
-	private final Map<String, Tag> value;
-	
-	/**
-	 * Creates the tag.
-	 * @param name The name.
+	 * Creates a tag with the specified name.
+	 * @param name The name of the tag.
 	 */
 	public CompoundTag(String name) {
-		this(name, new HashMap<String, Tag>());
+		this(name, new LinkedHashMap<String, Tag>());
 	}
 	
 	/**
-	 * Creates the tag.
-	 * @param name The name.
-	 * @param value The value.
+	 * Creates a tag with the specified name.
+	 * @param name The name of the tag.
+	 * @param value The value of the tag.
 	 */
 	public CompoundTag(String name, Map<String, Tag> value) {
 		super(name);
-		this.value = value;
+		this.value = new LinkedHashMap<String, Tag>(value);
 	}
 
 	@Override
 	public Map<String, Tag> getValue() {
-		return new HashMap<String, Tag>(value);
+		return new LinkedHashMap<String, Tag>(this.value);
 	}
 	
+	/**
+	 * Gets the tag with the specified name.
+	 * @param tagName Name of the tag.
+	 * @return The tag with the specified name.
+	 */
 	public Tag get(String tagName) {
 		return this.value.get(tagName);
 	}
 	
-	public Tag put(String tagName, Tag tag) {
-		return this.value.put(tagName, tag);
+	/**
+	 * Puts the tag into this compound tag.
+	 * @param tag Tag to put into this compound tag.
+	 * @return The previous tag associated with its name, or null if there wasn't one.
+	 */
+	public Tag put(Tag tag) {
+		return this.value.put(tag.getName(), tag);
 	}
 	
+	/**
+	 * Removes a tag from this compound tag.
+	 * @param tagName Name of the tag to remove.
+	 * @return The removed tag.
+	 */
 	public Tag remove(String tagName) {
 		return this.value.remove(tagName);
 	}
 	
+	/**
+	 * Gets a set of keys in this compound tag.
+	 * @return The compound tag's key set.
+	 */
 	public Set<String> keySet() {
 		return this.value.keySet();
 	}
 	
+	/**
+	 * Gets a collection of tags in this compound tag.
+	 * @return This compound tag's tags.
+	 */
 	public Collection<Tag> values() {
 		return this.value.values();
 	}
 	
+	/**
+	 * Gets the number of tags in this compound tag.
+	 * @return This compound tag's size.
+	 */
 	public int size() {
 		return this.value.size();
 	}
 	
+	/**
+	 * Clears all tags from this compound tag.
+	 */
 	public void clear() {
 		this.value.clear();
 	}
 	
 	@Override
-	public String toString() {
-		String name = getName();
-		String append = "";
-		if(name != null && !name.equals("")) {
-			append = "(\"" + this.getName() + "\")";
-		}
-		StringBuilder bldr = new StringBuilder();
-		bldr.append("TAG_Compound" + append + ": " + value.size() + " entries\r\n{\r\n");
-		for(Map.Entry<String, Tag> entry : value.entrySet()) {
-			bldr.append("   " + entry.getValue().toString().replaceAll("\r\n", "\r\n   ") + "\r\n");
-		}
-		bldr.append("}");
-		return bldr.toString();
+	public int getId() {
+		return 10;
 	}
 	
-	public CompoundTag clone() {
-		Map<String, Tag> newMap = NBTUtils.cloneMap(this.getValue());
+	@Override
+	public void read(DataInputStream in) throws IOException {
+		List<Tag> tags = NBTIO.readUntilEndTag(in);
+		for(Tag tag : tags) {
+			this.put(tag);
+		}
+	}
 
+	@Override
+	public void write(DataOutputStream out) throws IOException {
+		NBTIO.writeTags(out, this.value.values());
+		out.writeByte(0);
+	}
+	
+	@Override
+	public CompoundTag clone() {
+		Map<String, Tag> newMap = new LinkedHashMap<String, Tag>();
+		for(Entry<String, Tag> entry : this.value.entrySet()) {
+			newMap.put(entry.getKey(), entry.getValue().clone());
+		}
+		
 		return new CompoundTag(this.getName(), newMap);
 	}
 
