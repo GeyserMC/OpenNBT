@@ -6,7 +6,7 @@
 <b>About OpenNBT</b>
 --------------
 
-OpenNBT is a continuation of Graham Edgecombe's jNBT library.
+OpenNBT is a library for reading and writing NBT files, originally a continuation of Graham Edgecombe's jNBT library before it was rewritten.
 
 
 <b>License</b>
