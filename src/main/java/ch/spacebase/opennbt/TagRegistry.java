@@ -31,6 +31,14 @@ public class TagRegistry {
 	private static final Map<Integer, Class<? extends Tag>> tags = new HashMap<Integer, Class<? extends Tag>>();
 	private static boolean registered = false;
 	
+	static {
+		try {
+			registerDefaultTags();
+		} catch(TagRegisterException e) {
+			throw new RuntimeException("Failed to register default tags.", e);
+		}
+	}
+	
 	protected static void registerDefaultTags() throws TagRegisterException {
 		if(registered) {
 			return;

@@ -55,12 +55,6 @@ public class NBTFileIO {
 	 * @throws IOException If an I/O error occurs.
 	 */
 	public static CompoundTag readFile(File file, boolean compressed) throws IOException {
-		try {
-			TagRegistry.registerDefaultTags();
-		} catch(TagRegisterException e) {
-			throw new IOException("Failed to register default tags.", e);
-		}
-		
 		InputStream in = new FileInputStream(file);
 		if(compressed) {
 			in = new GZIPInputStream(in);
@@ -113,12 +107,6 @@ public class NBTFileIO {
 	 * @throws IOException If an I/O error occurs.
 	 */
 	public static void writeFile(CompoundTag tag, File file, boolean compressed) throws IOException {
-		try {
-			TagRegistry.registerDefaultTags();
-		} catch(TagRegisterException e) {
-			throw new IOException("Failed to register default tags.", e);
-		}
-		
 		if(!file.exists()) {
 			if(file.getParentFile() != null && !file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
