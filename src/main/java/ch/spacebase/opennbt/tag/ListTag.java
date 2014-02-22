@@ -133,6 +133,7 @@ public class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Override
 	public ListTag<T> clone() {
 		List<T> newList = new ArrayList<T>();
 		for(T value : this.value) {
