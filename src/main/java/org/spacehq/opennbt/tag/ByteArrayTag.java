@@ -1,103 +1,103 @@
-package ch.spacebase.opennbt.tag.custom;
+package org.spacehq.opennbt.tag;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import ch.spacebase.opennbt.tag.Tag;
-
 /**
- * A tag containing a short array.
+ * A tag containing a byte array.
  */
-public class ShortArrayTag extends Tag {
+public class ByteArrayTag extends Tag {
 
-	private short[] value;
-	
+	private byte[] value;
+
 	/**
 	 * Creates a tag with the specified name.
+	 *
 	 * @param name The name of the tag.
 	 */
-	public ShortArrayTag(String name) {
-		this(name, new short[0]);
+	public ByteArrayTag(String name) {
+		this(name, new byte[0]);
 	}
-	
+
 	/**
 	 * Creates a tag with the specified name.
-	 * @param name The name of the tag.
+	 *
+	 * @param name  The name of the tag.
 	 * @param value The value of the tag.
 	 */
-	public ShortArrayTag(String name, short[] value) {
+	public ByteArrayTag(String name, byte[] value) {
 		super(name);
 		this.value = value;
 	}
-	
+
 	@Override
-	public short[] getValue() {
+	public byte[] getValue() {
 		return this.value.clone();
 	}
-	
+
 	/**
 	 * Sets the value of this tag.
+	 *
 	 * @param value New value of this tag.
 	 */
-	public void setValue(short[] value) {
+	public void setValue(byte[] value) {
 		if(value == null) {
 			return;
 		}
-		
+
 		this.value = value.clone();
 	}
-	
+
 	/**
 	 * Gets a value in this tag's array.
+	 *
 	 * @param index Index of the value.
 	 * @return The value at the given index.
 	 */
-	public short getValue(int index) {
+	public byte getValue(int index) {
 		return this.value[index];
 	}
-	
+
 	/**
 	 * Sets a value in this tag's array.
+	 *
 	 * @param index Index of the value.
 	 * @param value Value to set.
 	 */
-	public void setValue(int index, short value) {
+	public void setValue(int index, byte value) {
 		this.value[index] = value;
 	}
-	
+
 	/**
 	 * Gets the length of this tag's array.
+	 *
 	 * @return This tag's array length.
 	 */
 	public int length() {
 		return this.value.length;
 	}
-	
+
 	@Override
 	public int getId() {
-		return 65;
+		return 7;
 	}
 
 	@Override
 	public void read(DataInputStream in) throws IOException {
-		this.value = new short[in.readInt()];
-    	for(int index = 0; index < this.value.length; index++) {
-        	this.value[index] = in.readShort();
-        }
+		this.value = new byte[in.readInt()];
+		in.readFully(this.value);
 	}
 
 	@Override
 	public void write(DataOutputStream out) throws IOException {
 		out.writeInt(this.value.length);
-		for(int index = 0; index < this.value.length; index++) {
-			out.writeShort(this.value[index]);
-		}
+		out.write(this.value);
 	}
-	
+
 	@Override
-	public ShortArrayTag clone() {
-		return new ShortArrayTag(this.getName(), this.getValue());
+	public ByteArrayTag clone() {
+		return new ByteArrayTag(this.getName(), this.getValue());
 	}
 
 }
