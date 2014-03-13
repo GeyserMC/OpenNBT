@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 /**
  * A compound tag containing other tags.
  */
-public class CompoundTag extends Tag {
+public class CompoundTag extends Tag implements Iterable<Tag> {
 
 	private Map<String, Tag> value;
 
@@ -38,6 +38,25 @@ public class CompoundTag extends Tag {
 	@Override
 	public Map<String, Tag> getValue() {
 		return new LinkedHashMap<String, Tag>(this.value);
+	}
+
+	/**
+	 * Checks whether the compound tag is empty.
+	 *
+	 * @return Whether the compound tag is empty.
+	 */
+	public boolean isEmpty() {
+		return this.value.isEmpty();
+	}
+
+	/**
+	 * Checks whether the compound tag contains a tag with the specified name.
+	 *
+	 * @param tagName Name of the tag to check for.
+	 * @return Whether the compound tag contains a tag with the specified name.
+	 */
+	public boolean contains(String tagName) {
+		return this.value.containsKey(tagName);
 	}
 
 	/**
@@ -102,6 +121,11 @@ public class CompoundTag extends Tag {
 	 */
 	public void clear() {
 		this.value.clear();
+	}
+
+	@Override
+	public Iterator<Tag> iterator() {
+		return this.values().iterator();
 	}
 
 	@Override

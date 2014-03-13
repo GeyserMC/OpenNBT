@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 
-	private Class<T> type;
 	private List<T> value;
+	private Class<T> type;
 
 	/**
 	 * Creates a tag with the specified name.
@@ -46,13 +46,22 @@ public class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 	 */
 	public ListTag(String name, Class<T> type, List<T> value) {
 		super(name);
-		this.type = type;
 		this.value = value;
+		this.type = type;
 	}
 
 	@Override
 	public List<T> getValue() {
 		return new ArrayList<T>(this.value);
+	}
+
+	/**
+	 * Gets the element type of the ListTag.
+	 *
+	 * @return The ListTag's element type.
+	 */
+	public Class<T> getElementType() {
+		return this.type;
 	}
 
 	/**
