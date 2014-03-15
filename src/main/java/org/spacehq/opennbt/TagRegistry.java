@@ -64,9 +64,13 @@ public class TagRegistry {
 	 * Gets the tag class with the given id.
 	 *
 	 * @param id Id of the tag.
-	 * @return The tag class with the given id.
+	 * @return The tag class with the given id, or null if it cannot be found.
 	 */
 	public static Class<? extends Tag> getClassFor(int id) {
+		if(!idToTag.containsKey(id)) {
+			return null;
+		}
+
 		return idToTag.get(id);
 	}
 
@@ -77,6 +81,10 @@ public class TagRegistry {
 	 * @return The id of the given tag class, or -1 if it cannot be found.
 	 */
 	public static int getIdFor(Class<? extends Tag> clazz) {
+		if(!tagToId.containsKey(clazz)) {
+			return -1;
+		}
+
 		return tagToId.get(clazz);
 	}
 
@@ -85,7 +93,8 @@ public class TagRegistry {
 	 *
 	 * @param id      Id of the tag.
 	 * @param tagName Name to give the tag.
-	 * @return The created tag, or null if it could not be created or the type does not exist.
+	 * @return The created tag.
+	 * @throws TagCreateException If an error occurs while creating the tag.
 	 */
 	public static Tag createInstance(int id, String tagName) throws TagCreateException {
 		Class<? extends Tag> clazz = idToTag.get(id);
