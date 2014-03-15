@@ -36,9 +36,13 @@ public class DoubleTag extends Tag {
 		return this.value;
 	}
 
-	@Override
-	public int getId() {
-		return 6;
+	/**
+	 * Sets the value of this tag.
+	 *
+	 * @param value New value of this tag.
+	 */
+	public void setValue(double value) {
+		this.value = value;
 	}
 
 	@Override
@@ -49,15 +53,6 @@ public class DoubleTag extends Tag {
 	@Override
 	public void write(DataOutputStream out) throws IOException {
 		out.writeDouble(this.value);
-	}
-
-	/**
-	 * Sets the value of this tag.
-	 *
-	 * @param value New value of this tag.
-	 */
-	public void setValue(double value) {
-		this.value = value;
 	}
 
 	@Override

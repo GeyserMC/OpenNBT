@@ -1,5 +1,6 @@
 package org.spacehq.opennbt.tag;
 
+import org.spacehq.opennbt.TagCreateException;
 import org.spacehq.opennbt.TagRegistry;
 
 import java.io.DataInputStream;
@@ -14,17 +15,16 @@ import java.util.List;
  */
 public class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 
-	private List<T> value;
 	private Class<T> type;
+	private List<T> value;
 
 	/**
 	 * Creates a tag with the specified name.
 	 *
 	 * @param name The name of the tag.
 	 */
-	public ListTag(String name) {
+	private ListTag(String name) {
 		super(name);
-		this.value = new ArrayList<T>();
 	}
 
 	/**
@@ -46,13 +46,22 @@ public class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 	 */
 	public ListTag(String name, Class<T> type, List<T> value) {
 		super(name);
-		this.value = value;
 		this.type = type;
+		this.value = new ArrayList<T>(value);
 	}
 
 	@Override
 	public List<T> getValue() {
 		return new ArrayList<T>(this.value);
+	}
+
+	/**
+	 * Sets the value of this tag.
+	 *
+	 * @param value New value of this tag.
+	 */
+	public void setValue(List<T> value) {
+		this.value = new ArrayList<T>(value);
 	}
 
 	/**
@@ -108,25 +117,23 @@ public class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 		return this.value.iterator();
 	}
 
-	@Override
-	public int getId() {
-		return 9;
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public void read(DataInputStream in) throws IOException {
 		int id = in.readByte() & 0xFF;
 		this.type = (Class<T>) TagRegistry.getClassFor(id);
+		this.value = new ArrayList<T>();
 		if(this.type == null) {
 			throw new IOException("Unknown tag ID in ListTag: " + id);
 		}
 
 		int count = in.readInt();
 		for(int index = 0; index < count; index++) {
-			Tag tag = TagRegistry.createInstance(id, "");
-			if(tag == null) {
-				throw new IOException("Tag could not be created: \"" + this.type.getSimpleName() + "\" (" + id + ")");
+			Tag tag = null;
+			try {
+				tag = TagRegistry.createInstance(id, "");
+			} catch(TagCreateException e) {
+				throw new IOException("Failed to create tag.", e);
 			}
 
 			tag.read(in);

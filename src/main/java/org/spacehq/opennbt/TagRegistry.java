@@ -3,6 +3,7 @@ package org.spacehq.opennbt;
 import org.spacehq.opennbt.tag.*;
 import org.spacehq.opennbt.tag.custom.*;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,30 +12,30 @@ import java.util.Map;
  */
 public class TagRegistry {
 
-	private static final Map<Integer, Class<? extends Tag>> tags = new HashMap<Integer, Class<? extends Tag>>();
+	private static final Map<Integer, Class<? extends Tag>> idToTag = new HashMap<Integer, Class<? extends Tag>>();
+	private static final Map<Class<? extends Tag>, Integer> tagToId = new HashMap<Class<? extends Tag>, Integer>();
 
 	static {
 		try {
-			register(CompoundTag.class);
-			register(ListTag.class);
+			register(1, ByteTag.class);
+			register(2, ShortTag.class);
+			register(3, IntTag.class);
+			register(4, LongTag.class);
+			register(5, FloatTag.class);
+			register(6, DoubleTag.class);
+			register(7, ByteArrayTag.class);
+			register(8, StringTag.class);
+			register(9, ListTag.class);
+			register(10, CompoundTag.class);
+			register(11, IntArrayTag.class);
 
-			register(SerializableTag.class);
-			register(StringTag.class);
-			register(ByteTag.class);
-			register(DoubleTag.class);
-			register(FloatTag.class);
-			register(IntTag.class);
-			register(LongTag.class);
-			register(ShortTag.class);
-
-			register(SerializableArrayTag.class);
-			register(StringArrayTag.class);
-			register(ByteArrayTag.class);
-			register(DoubleArrayTag.class);
-			register(FloatArrayTag.class);
-			register(IntArrayTag.class);
-			register(LongArrayTag.class);
-			register(ShortArrayTag.class);
+			register(60, DoubleArrayTag.class);
+			register(61, FloatArrayTag.class);
+			register(62, LongArrayTag.class);
+			register(63, SerializableArrayTag.class);
+			register(64, SerializableTag.class);
+			register(65, ShortArrayTag.class);
+			register(66, StringArrayTag.class);
 		} catch(TagRegisterException e) {
 			throw new RuntimeException("Failed to register default tags.", e);
 		}
@@ -46,13 +47,17 @@ public class TagRegistry {
 	 * @param tag Tag class to register.
 	 * @throws TagRegisterException If an error occurs while registering the tag.
 	 */
-	public static void register(Class<? extends Tag> tag) throws TagRegisterException {
-		try {
-			Tag t = tag.getDeclaredConstructor(String.class).newInstance("");
-			tags.put(t.getId(), tag);
-		} catch(Exception e) {
-			throw new TagRegisterException(e);
+	public static void register(int id, Class<? extends Tag> tag) throws TagRegisterException {
+		if(idToTag.containsKey(id)) {
+			throw new TagRegisterException("Tag ID \"" + id + "\" is already in use.");
 		}
+
+		if(tagToId.containsKey(tag)) {
+			throw new TagRegisterException("Tag \"" + tag.getSimpleName() + "\" is already registered.");
+		}
+
+		idToTag.put(id, tag);
+		tagToId.put(tag, id);
 	}
 
 	/**
@@ -62,23 +67,17 @@ public class TagRegistry {
 	 * @return The tag class with the given id.
 	 */
 	public static Class<? extends Tag> getClassFor(int id) {
-		return tags.get(id);
+		return idToTag.get(id);
 	}
 
 	/**
 	 * Gets the id of the given tag class.
 	 *
-	 * @param clazz The tag class to get the id for.
+	 * @param clazz The tag class to get the id of.
 	 * @return The id of the given tag class, or -1 if it cannot be found.
 	 */
 	public static int getIdFor(Class<? extends Tag> clazz) {
-		for(int id : tags.keySet()) {
-			if(tags.get(id) == clazz) {
-				return id;
-			}
-		}
-
-		return -1;
+		return tagToId.get(clazz);
 	}
 
 	/**
@@ -88,17 +87,18 @@ public class TagRegistry {
 	 * @param tagName Name to give the tag.
 	 * @return The created tag, or null if it could not be created or the type does not exist.
 	 */
-	public static Tag createInstance(int id, String tagName) {
-		if(!tags.containsKey(id)) {
-			return null;
+	public static Tag createInstance(int id, String tagName) throws TagCreateException {
+		Class<? extends Tag> clazz = idToTag.get(id);
+		if(clazz == null) {
+			throw new TagCreateException("Could not find tag with ID \"" + id + "\".");
 		}
 
-		Class<? extends Tag> clazz = tags.get(id);
 		try {
-			return clazz.getDeclaredConstructor(String.class).newInstance(tagName);
+			Constructor<? extends Tag> constructor = clazz.getDeclaredConstructor(String.class);
+			constructor.setAccessible(true);
+			return constructor.newInstance(tagName);
 		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
+			throw new TagCreateException("Failed to create instance of tag \"" + clazz.getSimpleName() + "\".", e);
 		}
 	}
 

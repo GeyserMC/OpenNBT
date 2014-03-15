@@ -79,11 +79,6 @@ public class SerializableArrayTag extends Tag {
 	}
 
 	@Override
-	public int getId() {
-		return 63;
-	}
-
-	@Override
 	public void read(DataInputStream in) throws IOException {
 		this.value = new Serializable[in.readInt()];
 		ObjectInputStream str = new ObjectInputStream(in);

@@ -46,11 +46,6 @@ public class ShortTag extends Tag {
 	}
 
 	@Override
-	public int getId() {
-		return 2;
-	}
-
-	@Override
 	public void read(DataInputStream in) throws IOException {
 		this.value = in.readShort();
 	}

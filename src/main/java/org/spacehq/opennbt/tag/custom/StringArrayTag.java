@@ -82,11 +82,6 @@ public class StringArrayTag extends Tag {
 	}
 
 	@Override
-	public int getId() {
-		return 66;
-	}
-
-	@Override
 	public void read(DataInputStream in) throws IOException {
 		this.value = new String[in.readInt()];
 		for(int index = 0; index < this.value.length; index++) {

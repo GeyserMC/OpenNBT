@@ -8,7 +8,7 @@ import java.lang.reflect.Array;
 /**
  * Represents an NBT tag.
  * <p/>
- * All tags must have a constructor with a single string parameter for reading tags.
+ * All tags must have a constructor with a single string parameter for reading tags (can be any visibility).
  * Tags should also have setter methods specific to their value types.
  */
 public abstract class Tag implements Cloneable {
@@ -41,13 +41,6 @@ public abstract class Tag implements Cloneable {
 	public abstract Object getValue();
 
 	/**
-	 * Gets the type id of this tag.
-	 *
-	 * @return The tag's id.
-	 */
-	public abstract int getId();
-
-	/**
 	 * Reads this tag from an input stream.
 	 *
 	 * @param in Stream to write to.
@@ -62,6 +55,9 @@ public abstract class Tag implements Cloneable {
 	 * @throws java.io.IOException If an I/O error occurs.
 	 */
 	public abstract void write(DataOutputStream out) throws IOException;
+
+	@Override
+	public abstract Tag clone();
 
 	@Override
 	public boolean equals(Object obj) {
@@ -124,8 +120,5 @@ public abstract class Tag implements Cloneable {
 
 		return this.getClass().getSimpleName() + name + " { " + value + " }";
 	}
-
-	@Override
-	public abstract Tag clone();
 
 }

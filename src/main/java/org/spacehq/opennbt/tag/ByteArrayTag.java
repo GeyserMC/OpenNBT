@@ -79,11 +79,6 @@ public class ByteArrayTag extends Tag {
 	}
 
 	@Override
-	public int getId() {
-		return 7;
-	}
-
-	@Override
 	public void read(DataInputStream in) throws IOException {
 		this.value = new byte[in.readInt()];
 		in.readFully(this.value);

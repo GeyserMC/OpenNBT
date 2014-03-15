@@ -36,9 +36,13 @@ public class FloatTag extends Tag {
 		return this.value;
 	}
 
-	@Override
-	public int getId() {
-		return 5;
+	/**
+	 * Sets the value of this tag.
+	 *
+	 * @param value New value of this tag.
+	 */
+	public void setValue(float value) {
+		this.value = value;
 	}
 
 	@Override
@@ -49,15 +53,6 @@ public class FloatTag extends Tag {
 	@Override
 	public void write(DataOutputStream out) throws IOException {
 		out.writeFloat(this.value);
-	}
-
-	/**
-	 * Sets the value of this tag.
-	 *
-	 * @param value New value of this tag.
-	 */
-	public void setValue(float value) {
-		this.value = value;
 	}
 
 	@Override

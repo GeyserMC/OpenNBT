@@ -81,11 +81,6 @@ public class FloatArrayTag extends Tag {
 	}
 
 	@Override
-	public int getId() {
-		return 61;
-	}
-
-	@Override
 	public void read(DataInputStream in) throws IOException {
 		this.value = new float[in.readInt()];
 		for(int index = 0; index < this.value.length; index++) {

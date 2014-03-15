@@ -48,11 +48,6 @@ public class StringTag extends Tag {
 	}
 
 	@Override
-	public int getId() {
-		return 8;
-	}
-
-	@Override
 	public void read(DataInputStream in) throws IOException {
 		byte[] bytes = new byte[in.readShort()];
 		in.readFully(bytes);

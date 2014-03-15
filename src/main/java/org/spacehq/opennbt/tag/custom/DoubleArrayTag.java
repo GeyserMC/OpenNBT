@@ -81,11 +81,6 @@ public class DoubleArrayTag extends Tag {
 	}
 
 	@Override
-	public int getId() {
-		return 60;
-	}
-
-	@Override
 	public void read(DataInputStream in) throws IOException {
 		this.value = new double[in.readInt()];
 		for(int index = 0; index < this.value.length; index++) {

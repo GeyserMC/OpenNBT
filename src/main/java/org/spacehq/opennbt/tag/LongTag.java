@@ -46,11 +46,6 @@ public class LongTag extends Tag {
 	}
 
 	@Override
-	public int getId() {
-		return 4;
-	}
-
-	@Override
 	public void read(DataInputStream in) throws IOException {
 		this.value = in.readLong();
 	}

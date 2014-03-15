@@ -81,11 +81,6 @@ public class ShortArrayTag extends Tag {
 	}
 
 	@Override
-	public int getId() {
-		return 65;
-	}
-
-	@Override
 	public void read(DataInputStream in) throws IOException {
 		this.value = new short[in.readInt()];
 		for(int index = 0; index < this.value.length; index++) {

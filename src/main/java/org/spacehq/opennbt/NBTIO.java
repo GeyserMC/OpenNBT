@@ -55,9 +55,11 @@ public class NBTIO {
 		byte[] nameBytes = new byte[in.readShort() & 0xFFFF];
 		in.readFully(nameBytes);
 		String name = new String(nameBytes, CHARSET);
-		Tag tag = TagRegistry.createInstance(id, name);
-		if(tag == null) {
-			throw new IOException("Invalid tag: " + id);
+		Tag tag = null;
+		try {
+			tag = TagRegistry.createInstance(id, name);
+		} catch(TagCreateException e) {
+			throw new IOException("Failed to create tag.", e);
 		}
 
 		tag.read(in);
@@ -86,7 +88,7 @@ public class NBTIO {
 	 */
 	public static void writeTag(DataOutputStream out, Tag tag) throws IOException {
 		byte[] nameBytes = tag.getName().getBytes(CHARSET);
-		out.writeByte(tag.getId());
+		out.writeByte(TagRegistry.getIdFor(tag.getClass()));
 		out.writeShort(nameBytes.length);
 		out.write(nameBytes);
 		tag.write(out);

@@ -41,6 +41,15 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
 	}
 
 	/**
+	 * Sets the value of this tag.
+	 *
+	 * @param value New value of this tag.
+	 */
+	public void setValue(Map<String, Tag> value) {
+		this.value = new LinkedHashMap<String, Tag>(value);
+	}
+
+	/**
 	 * Checks whether the compound tag is empty.
 	 *
 	 * @return Whether the compound tag is empty.
@@ -126,11 +135,6 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
 	@Override
 	public Iterator<Tag> iterator() {
 		return this.values().iterator();
-	}
-
-	@Override
-	public int getId() {
-		return 10;
 	}
 
 	@Override

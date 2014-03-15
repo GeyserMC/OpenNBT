@@ -81,11 +81,6 @@ public class LongArrayTag extends Tag {
 	}
 
 	@Override
-	public int getId() {
-		return 62;
-	}
-
-	@Override
 	public void read(DataInputStream in) throws IOException {
 		this.value = new long[in.readInt()];
 		for(int index = 0; index < this.value.length; index++) {

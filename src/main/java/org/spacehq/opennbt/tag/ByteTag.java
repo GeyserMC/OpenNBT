@@ -46,11 +46,6 @@ public class ByteTag extends Tag {
 	}
 
 	@Override
-	public int getId() {
-		return 1;
-	}
-
-	@Override
 	public void read(DataInputStream in) throws IOException {
 		this.value = in.readByte();
 	}
