@@ -47,12 +47,12 @@ public class NBTIO {
 	 * @throws java.io.IOException If an I/O error occurs.
 	 */
 	public static Tag readTag(DataInputStream in) throws IOException {
-		int id = in.readByte() & 0xFF;
+		int id = in.readUnsignedByte();
 		if(id == 0) {
 			return null;
 		}
 
-		byte[] nameBytes = new byte[in.readShort() & 0xFFFF];
+		byte[] nameBytes = new byte[in.readUnsignedShort()];
 		in.readFully(nameBytes);
 		String name = new String(nameBytes, CHARSET);
 		Tag tag = null;

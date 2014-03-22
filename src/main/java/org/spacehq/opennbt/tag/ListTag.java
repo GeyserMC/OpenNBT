@@ -120,7 +120,7 @@ public class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void read(DataInputStream in) throws IOException {
-		int id = in.readByte() & 0xFF;
+		int id = in.readUnsignedByte();
 		this.type = (Class<T>) TagRegistry.getClassFor(id);
 		this.value = new ArrayList<T>();
 		if(this.type == null) {
