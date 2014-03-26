@@ -132,6 +132,29 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
 		this.value.clear();
 	}
 
+	/**
+	 * Converts this CompoundTag to a Map<String, Object> with non-tag values.
+	 * @return A Map<String, Object> with non-tag values.
+	 */
+	public Map<String, Object> toMap() {
+		Map<String, Object> ret = new HashMap<String, Object>();
+		for(String name : this.value.keySet()) {
+			Tag tag = this.value.get(name);
+			Object o = null;
+			if(tag instanceof CompoundTag) {
+				o = ((CompoundTag) tag).toMap();
+			} else if(tag instanceof ListTag) {
+				o = ((ListTag) tag).toList();
+			} else {
+				o = tag.getValue();
+			}
+
+			ret.put(name, o);
+		}
+
+		return ret;
+	}
+
 	@Override
 	public Iterator<Tag> iterator() {
 		return this.values().iterator();

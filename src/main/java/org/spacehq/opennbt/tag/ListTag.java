@@ -6,9 +6,7 @@ import org.spacehq.opennbt.TagRegistry;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * A tag containing a list of tags.
@@ -110,6 +108,28 @@ public class ListTag<T extends Tag> extends Tag implements Iterable<T> {
 	 */
 	public int size() {
 		return this.value.size();
+	}
+
+	/**
+	 * Converts this CompoundTag to a List<Object> with non-tag values.
+	 * @return A List<Object> with non-tag values.
+	 */
+	public List<Object> toList() {
+		List<Object> ret = new ArrayList<Object>();
+		for(Tag tag : this.value) {
+			Object o = null;
+			if(tag instanceof CompoundTag) {
+				o = ((CompoundTag) tag).toMap();
+			} else if(tag instanceof ListTag) {
+				o = ((ListTag) tag).toList();
+			} else {
+				o = tag.getValue();
+			}
+
+			ret.add(o);
+		}
+
+		return ret;
 	}
 
 	@Override
