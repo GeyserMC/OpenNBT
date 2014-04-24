@@ -147,7 +147,7 @@ public class ListTag extends Tag implements Iterable<Tag> {
 		int id = in.readUnsignedByte();
 		this.type = TagRegistry.getClassFor(id);
 		this.value = new ArrayList<Tag>();
-		if(this.type == null) {
+		if(id != 0 && this.type == null) {
 			throw new IOException("Unknown tag ID in ListTag: " + id);
 		}
 
@@ -167,12 +167,17 @@ public class ListTag extends Tag implements Iterable<Tag> {
 
 	@Override
 	public void write(DataOutputStream out) throws IOException {
-		int id = TagRegistry.getIdFor(this.type);
-		if(id == -1) {
-			throw new IOException("ListTag contains unregistered tag class.");
+		if(this.value.isEmpty()) {
+			out.writeByte(0);
+		} else {
+			int id = TagRegistry.getIdFor(this.type);
+			if(id == -1) {
+				throw new IOException("ListTag contains unregistered tag class.");
+			}
+
+			out.writeByte(id);
 		}
 
-		out.writeByte(id);
 		out.writeInt(this.value.size());
 		for(Tag tag : this.value) {
 			tag.write(out);
