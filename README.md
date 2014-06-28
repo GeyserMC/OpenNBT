@@ -13,7 +13,8 @@ OpenNBT is a library for reading and writing NBT files, with some extra custom t
 --------------
 
 OpenNBT uses Maven to manage dependencies. Simply run 'mvn clean install' in the source's directory.
-You can also download a build <b>[here](http://build.spacehq.org/browse/OPENNBT-MAIN)</b>.
+Snapshots (if any exist) can be downloaded <b>[here](http://repo.spacehq.org/content/repositories/snapshots/org/spacehq/opennbt)</b>.
+Releases (if any exist) can be downloaded <b>[here](http://repo.spacehq.org/content/repositories/release/org/spacehq/opennbt)</b>.
 
 
 <b>License</b>
