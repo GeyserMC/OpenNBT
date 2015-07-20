@@ -1,14 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.spacehq</groupId>
     <artifactId>opennbt</artifactId>
-    <version>1.4</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>OpenNBT</name>
     <description>A library for reading and writing NBT files, written in Java.</description>
     <url>http://github.com/Steveice10/OpenNBT/</url>
+
+    <scm>
+        <connection>scm:git:git@github.com:Steveice10/OpenNBT.git</connection>
+        <developerConnection>scm:git:git@github.com:Steveice10/OpenNBT.git</developerConnection>
+        <url>http://github.com/Steveice10/OpenNBT/</url>
+    </scm>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <licenses>
         <license>
@@ -18,25 +29,6 @@
         </license>
     </licenses>
 
-    <scm>
-        <connection>scm:git:git@github.com:Steveice10/OpenNBT.git</connection>
-        <developerConnection>scm:git:git@github.com:Steveice10/OpenNBT.git</developerConnection>
-        <url>http://github.com/Steveice10/OpenNBT/</url>
-    </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>spacehq</id>
-            <name>spacehq-releases</name>
-            <url>http://repo.spacehq.org/content/repositories/release/</url>
-        </repository>
-        <snapshotRepository>
-            <id>spacehq</id>
-            <name>spacehq-snapshots</name>
-            <url>http://repo.spacehq.org/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <developers>
         <developer>
             <id>steveice10</id>
@@ -45,9 +37,32 @@
         </developer>
     </developers>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <distributionManagement>
+        <repository>
+            <id>spacehq</id>
+            <name>spacehq-releases</name>
+            <url>http://repo.spacehq.org/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>spacehq</id>
+            <name>spacehq-snapshots</name>
+            <url>http://repo.spacehq.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>spacehq-releases</id>
+            <url>http://repo.spacehq.org/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>spacehq-snapshots</id>
+            <url>http://repo.spacehq.org/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+    </dependencies>
 
     <build>
         <defaultGoal>clean install</defaultGoal>
@@ -56,12 +71,42 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>2.6</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
             </plugin>
         </plugins>
     </build>
