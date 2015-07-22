@@ -10,7 +10,6 @@ import java.io.IOException;
  * A tag containing a short array.
  */
 public class ShortArrayTag extends Tag {
-
 	private short[] value;
 
 	/**
@@ -100,5 +99,4 @@ public class ShortArrayTag extends Tag {
 	public ShortArrayTag clone() {
 		return new ShortArrayTag(this.getName(), this.getValue());
 	}
-
 }

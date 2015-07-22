@@ -8,7 +8,6 @@ import java.io.IOException;
  * A tag containing a short.
  */
 public class ShortTag extends Tag {
-
 	private short value;
 
 	/**
@@ -59,5 +58,4 @@ public class ShortTag extends Tag {
 	public ShortTag clone() {
 		return new ShortTag(this.getName(), this.getValue());
 	}
-
 }

@@ -8,7 +8,6 @@ import java.io.IOException;
  * A tag containing a float.
  */
 public class FloatTag extends Tag {
-
 	private float value;
 
 	/**
@@ -59,5 +58,4 @@ public class FloatTag extends Tag {
 	public FloatTag clone() {
 		return new FloatTag(this.getName(), this.getValue());
 	}
-
 }

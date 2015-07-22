@@ -12,7 +12,6 @@ import java.util.Map;
  * A converter that converts between CompoundTag and Map.
  */
 public class CompoundTagConverter implements TagConverter<CompoundTag, Map> {
-
 	@Override
 	public Map convert(CompoundTag tag) {
 		Map<String, Object> ret = new HashMap<String, Object>();
@@ -35,5 +34,4 @@ public class CompoundTagConverter implements TagConverter<CompoundTag, Map> {
 
 		return new CompoundTag(name, tags);
 	}
-
 }

@@ -10,7 +10,6 @@ import java.io.IOException;
  * A tag containing a double array.
  */
 public class DoubleArrayTag extends Tag {
-
 	private double[] value;
 
 	/**
@@ -100,5 +99,4 @@ public class DoubleArrayTag extends Tag {
 	public DoubleArrayTag clone() {
 		return new DoubleArrayTag(this.getName(), this.getValue());
 	}
-
 }

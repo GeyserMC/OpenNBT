@@ -10,7 +10,6 @@ import java.io.IOException;
  * A tag containing a string.
  */
 public class StringTag extends Tag {
-
 	private String value;
 
 	/**
@@ -65,5 +64,4 @@ public class StringTag extends Tag {
 	public StringTag clone() {
 		return new StringTag(this.getName(), this.getValue());
 	}
-
 }

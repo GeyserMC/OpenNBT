@@ -9,7 +9,6 @@ import org.spacehq.opennbt.tag.builtin.Tag;
  * @param <V> Value type.
  */
 public interface TagConverter<T extends Tag, V> {
-
 	/**
 	 * Converts a tag to a value.
 	 *
@@ -25,5 +24,4 @@ public interface TagConverter<T extends Tag, V> {
 	 * @return The converted tag.
 	 */
 	public T convert(String name, V value);
-
 }

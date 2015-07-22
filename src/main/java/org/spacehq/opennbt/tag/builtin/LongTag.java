@@ -8,7 +8,6 @@ import java.io.IOException;
  * A tag containing a long.
  */
 public class LongTag extends Tag {
-
 	private long value;
 
 	/**
@@ -59,5 +58,4 @@ public class LongTag extends Tag {
 	public LongTag clone() {
 		return new LongTag(this.getName(), this.getValue());
 	}
-
 }

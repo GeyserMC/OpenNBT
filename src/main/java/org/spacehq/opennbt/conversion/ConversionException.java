@@ -4,7 +4,6 @@ package org.spacehq.opennbt.conversion;
  * An exception thrown when an error occurs while converting something.
  */
 public class ConversionException extends RuntimeException {
-
 	private static final long serialVersionUID = -2022049594558041160L;
 
 	public ConversionException() {
@@ -22,5 +21,4 @@ public class ConversionException extends RuntimeException {
 	public ConversionException(String message, Throwable cause) {
 		super(message, cause);
 	}
-
 }

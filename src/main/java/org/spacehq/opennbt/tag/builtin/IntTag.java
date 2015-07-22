@@ -8,7 +8,6 @@ import java.io.IOException;
  * A tag containing an integer.
  */
 public class IntTag extends Tag {
-
 	private int value;
 
 	/**
@@ -59,5 +58,4 @@ public class IntTag extends Tag {
 	public IntTag clone() {
 		return new IntTag(this.getName(), this.getValue());
 	}
-
 }

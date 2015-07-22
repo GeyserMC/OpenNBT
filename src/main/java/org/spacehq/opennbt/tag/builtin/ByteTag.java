@@ -8,7 +8,6 @@ import java.io.IOException;
  * A tag containing a byte.
  */
 public class ByteTag extends Tag {
-
 	private byte value;
 
 	/**
@@ -59,5 +58,4 @@ public class ByteTag extends Tag {
 	public ByteTag clone() {
 		return new ByteTag(this.getName(), this.getValue());
 	}
-
 }

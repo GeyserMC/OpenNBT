@@ -4,7 +4,6 @@ package org.spacehq.opennbt.conversion;
  * An exception thrown when an error occurs while registering a converter.
  */
 public class ConverterRegisterException extends RuntimeException {
-
 	private static final long serialVersionUID = -2022049594558041160L;
 
 	public ConverterRegisterException() {
@@ -22,5 +21,4 @@ public class ConverterRegisterException extends RuntimeException {
 	public ConverterRegisterException(String message, Throwable cause) {
 		super(message, cause);
 	}
-
 }

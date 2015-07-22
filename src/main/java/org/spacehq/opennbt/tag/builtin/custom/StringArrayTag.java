@@ -11,7 +11,6 @@ import java.io.IOException;
  * A tag containing a string array.
  */
 public class StringArrayTag extends Tag {
-
 	private String[] value;
 
 	/**
@@ -105,5 +104,4 @@ public class StringArrayTag extends Tag {
 	public StringArrayTag clone() {
 		return new StringArrayTag(this.getName(), this.getValue());
 	}
-
 }

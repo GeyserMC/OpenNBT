@@ -13,7 +13,6 @@ import java.util.*;
  * A registry mapping tags and value types to converters.
  */
 public class ConverterRegistry {
-
 	private static final Map<Class<? extends Tag>, TagConverter<? extends Tag, ?>> tagToConverter = new HashMap<Class<? extends Tag>, TagConverter<? extends Tag, ?>>();
 	private static final Map<Class<?>, TagConverter<? extends Tag, ?>> typeToConverter = new HashMap<Class<?>, TagConverter<? extends Tag, ?>>();
 
@@ -140,5 +139,4 @@ public class ConverterRegistry {
 
 		return ret;
 	}
-
 }

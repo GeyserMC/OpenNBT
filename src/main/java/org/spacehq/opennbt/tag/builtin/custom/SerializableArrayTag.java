@@ -8,7 +8,6 @@ import java.io.*;
  * A tag containing an array of serializable objects.
  */
 public class SerializableArrayTag extends Tag {
-
 	private Serializable[] value;
 
 	/**
@@ -104,5 +103,4 @@ public class SerializableArrayTag extends Tag {
 	public SerializableArrayTag clone() {
 		return new SerializableArrayTag(this.getName(), this.getValue());
 	}
-
 }

@@ -12,7 +12,6 @@ import java.lang.reflect.Array;
  * Tags should also have setter methods specific to their value types.
  */
 public abstract class Tag implements Cloneable {
-
 	private String name;
 
 	/**
@@ -120,5 +119,4 @@ public abstract class Tag implements Cloneable {
 
 		return this.getClass().getSimpleName() + name + " { " + value + " }";
 	}
-
 }

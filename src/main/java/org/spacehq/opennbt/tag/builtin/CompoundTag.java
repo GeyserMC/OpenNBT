@@ -13,7 +13,6 @@ import java.util.Map.Entry;
  * A compound tag containing other tags.
  */
 public class CompoundTag extends Tag implements Iterable<Tag> {
-
 	private Map<String, Tag> value;
 
 	/**
@@ -173,5 +172,4 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
 
 		return new CompoundTag(this.getName(), newMap);
 	}
-
 }

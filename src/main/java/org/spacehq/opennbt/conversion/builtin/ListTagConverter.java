@@ -12,7 +12,6 @@ import java.util.List;
  * A converter that converts between CompoundTag and Map.
  */
 public class ListTagConverter implements TagConverter<ListTag, List> {
-
 	@Override
 	public List convert(ListTag tag) {
 		List<Object> ret = new ArrayList<Object>();
@@ -37,5 +36,4 @@ public class ListTagConverter implements TagConverter<ListTag, List> {
 
 		return new ListTag(name, tags);
 	}
-
 }

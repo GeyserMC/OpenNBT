@@ -7,7 +7,6 @@ import org.spacehq.opennbt.tag.builtin.IntArrayTag;
  * A converter that converts between IntArrayTag and int[].
  */
 public class IntArrayTagConverter implements TagConverter<IntArrayTag, int[]> {
-
 	@Override
 	public int[] convert(IntArrayTag tag) {
 		return tag.getValue();
@@ -17,5 +16,4 @@ public class IntArrayTagConverter implements TagConverter<IntArrayTag, int[]> {
 	public IntArrayTag convert(String name, int[] value) {
 		return new IntArrayTag(name, value);
 	}
-
 }

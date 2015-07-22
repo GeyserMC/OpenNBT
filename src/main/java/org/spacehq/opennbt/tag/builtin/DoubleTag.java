@@ -8,7 +8,6 @@ import java.io.IOException;
  * A tag containing a double.
  */
 public class DoubleTag extends Tag {
-
 	private double value;
 
 	/**
@@ -59,5 +58,4 @@ public class DoubleTag extends Tag {
 	public DoubleTag clone() {
 		return new DoubleTag(this.getName(), this.getValue());
 	}
-
 }

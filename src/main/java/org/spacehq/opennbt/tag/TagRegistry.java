@@ -11,7 +11,6 @@ import java.util.Map;
  * A registry containing different tag classes.
  */
 public class TagRegistry {
-
 	private static final Map<Integer, Class<? extends Tag>> idToTag = new HashMap<Integer, Class<? extends Tag>>();
 	private static final Map<Class<? extends Tag>, Integer> tagToId = new HashMap<Class<? extends Tag>, Integer>();
 
@@ -106,5 +105,4 @@ public class TagRegistry {
 			throw new TagCreateException("Failed to create instance of tag \"" + clazz.getSimpleName() + "\".", e);
 		}
 	}
-
 }

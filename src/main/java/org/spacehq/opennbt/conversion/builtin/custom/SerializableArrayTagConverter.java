@@ -9,7 +9,6 @@ import java.io.Serializable;
  * A converter that converts between SerializableArrayTag and Serializable[].
  */
 public class SerializableArrayTagConverter implements TagConverter<SerializableArrayTag, Serializable[]> {
-
 	@Override
 	public Serializable[] convert(SerializableArrayTag tag) {
 		return tag.getValue();
@@ -19,5 +18,4 @@ public class SerializableArrayTagConverter implements TagConverter<SerializableA
 	public SerializableArrayTag convert(String name, Serializable[] value) {
 		return new SerializableArrayTag(name, value);
 	}
-
 }

@@ -14,7 +14,6 @@ import java.util.List;
  * A tag containing a list of tags.
  */
 public class ListTag extends Tag implements Iterable<Tag> {
-
 	private Class<? extends Tag> type;
 	private List<Tag> value;
 
@@ -193,5 +192,4 @@ public class ListTag extends Tag implements Iterable<Tag> {
 
 		return new ListTag(this.getName(), newList);
 	}
-
 }

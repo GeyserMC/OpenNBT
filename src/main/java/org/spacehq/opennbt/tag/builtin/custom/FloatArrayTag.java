@@ -10,7 +10,6 @@ import java.io.IOException;
  * A tag containing a float array.
  */
 public class FloatArrayTag extends Tag {
-
 	private float[] value;
 
 	/**
@@ -100,5 +99,4 @@ public class FloatArrayTag extends Tag {
 	public FloatArrayTag clone() {
 		return new FloatArrayTag(this.getName(), this.getValue());
 	}
-
 }

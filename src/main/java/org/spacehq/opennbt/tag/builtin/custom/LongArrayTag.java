@@ -10,7 +10,6 @@ import java.io.IOException;
  * A tag containing a long array.
  */
 public class LongArrayTag extends Tag {
-
 	private long[] value;
 
 	/**
@@ -100,5 +99,4 @@ public class LongArrayTag extends Tag {
 	public LongArrayTag clone() {
 		return new LongArrayTag(this.getName(), this.getValue());
 	}
-
 }

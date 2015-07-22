@@ -14,7 +14,6 @@ import java.util.zip.GZIPOutputStream;
  * A class containing methods for reading/writing NBT tags.
  */
 public class NBTIO {
-
 	public static final Charset CHARSET = Charset.forName("UTF-8");
 
 	/**
@@ -174,5 +173,4 @@ public class NBTIO {
 		out.write(nameBytes);
 		tag.write(out);
 	}
-
 }
