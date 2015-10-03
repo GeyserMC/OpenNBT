@@ -1,6 +1,5 @@
 package org.spacehq.opennbt.tag.builtin.custom;
 
-import org.spacehq.opennbt.NBTIO;
 import org.spacehq.opennbt.tag.builtin.Tag;
 
 import java.io.DataInputStream;
@@ -84,9 +83,7 @@ public class StringArrayTag extends Tag {
 	public void read(DataInputStream in) throws IOException {
 		this.value = new String[in.readInt()];
 		for(int index = 0; index < this.value.length; index++) {
-			byte[] bytes = new byte[in.readShort()];
-			in.readFully(bytes);
-			this.value[index] = new String(bytes, NBTIO.CHARSET);
+			this.value[index] = in.readUTF();
 		}
 	}
 
@@ -94,9 +91,7 @@ public class StringArrayTag extends Tag {
 	public void write(DataOutputStream out) throws IOException {
 		out.writeInt(this.value.length);
 		for(int index = 0; index < this.value.length; index++) {
-			byte[] bytes = this.value[index].getBytes(NBTIO.CHARSET);
-			out.writeShort(bytes.length);
-			out.write(bytes);
+			out.writeUTF(this.value[index]);
 		}
 	}
 
