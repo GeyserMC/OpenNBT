@@ -1,7 +1,5 @@
 package org.spacehq.opennbt.tag.builtin;
 
-import org.spacehq.opennbt.NBTIO;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -48,16 +46,12 @@ public class StringTag extends Tag {
 
 	@Override
 	public void read(DataInputStream in) throws IOException {
-		byte[] bytes = new byte[in.readShort()];
-		in.readFully(bytes);
-		this.value = new String(bytes, NBTIO.CHARSET);
+		this.value = in.readUTF();
 	}
 
 	@Override
 	public void write(DataOutputStream out) throws IOException {
-		byte[] bytes = this.value.getBytes(NBTIO.CHARSET);
-		out.writeShort(bytes.length);
-		out.write(bytes);
+		out.writeUTF(this.value);
 	}
 
 	@Override

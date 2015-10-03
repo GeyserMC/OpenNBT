@@ -6,7 +6,6 @@ import org.spacehq.opennbt.tag.builtin.CompoundTag;
 import org.spacehq.opennbt.tag.builtin.Tag;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -14,7 +13,6 @@ import java.util.zip.GZIPOutputStream;
  * A class containing methods for reading/writing NBT tags.
  */
 public class NBTIO {
-	public static final Charset CHARSET = Charset.forName("UTF-8");
 
 	/**
 	 * Reads the root CompoundTag from the given file.
@@ -145,10 +143,9 @@ public class NBTIO {
 			return null;
 		}
 
-		byte[] nameBytes = new byte[in.readUnsignedShort()];
-		in.readFully(nameBytes);
-		String name = new String(nameBytes, CHARSET);
-		Tag tag = null;
+		String name = in.readUTF();
+		Tag tag;
+
 		try {
 			tag = TagRegistry.createInstance(id, name);
 		} catch(TagCreateException e) {
@@ -167,10 +164,8 @@ public class NBTIO {
 	 * @throws java.io.IOException If an I/O error occurs.
 	 */
 	public static void writeTag(DataOutputStream out, Tag tag) throws IOException {
-		byte[] nameBytes = tag.getName().getBytes(CHARSET);
 		out.writeByte(TagRegistry.getIdFor(tag.getClass()));
-		out.writeShort(nameBytes.length);
-		out.write(nameBytes);
+		out.writeUTF(tag.getName());
 		tag.write(out);
 	}
 }
