@@ -13,7 +13,6 @@ import java.util.zip.GZIPOutputStream;
  * A class containing methods for reading/writing NBT tags.
  */
 public class NBTIO {
-
 	/**
 	 * Reads the root CompoundTag from the given file.
 	 *
@@ -62,7 +61,7 @@ public class NBTIO {
 			in = new GZIPInputStream(in);
 		}
 
-		Tag tag = readTag(new DataInputStream(in));
+		Tag tag = readTag(in);
 		if(!(tag instanceof CompoundTag)) {
 			throw new IOException("Root tag is not a CompoundTag!");
 		}
@@ -126,7 +125,7 @@ public class NBTIO {
 			out = new GZIPOutputStream(out);
 		}
 
-		writeTag(new DataOutputStream(out), tag);
+		writeTag(out, tag);
 		out.close();
 	}
 
@@ -137,13 +136,15 @@ public class NBTIO {
 	 * @return The read tag, or null if the tag is an end tag.
 	 * @throws java.io.IOException If an I/O error occurs.
 	 */
-	public static Tag readTag(DataInputStream in) throws IOException {
-		int id = in.readUnsignedByte();
+	public static Tag readTag(InputStream in) throws IOException {
+		DataInputStream dataIn = new DataInputStream(in);
+
+		int id = dataIn.readUnsignedByte();
 		if(id == 0) {
 			return null;
 		}
 
-		String name = in.readUTF();
+		String name = dataIn.readUTF();
 		Tag tag;
 
 		try {
@@ -152,7 +153,7 @@ public class NBTIO {
 			throw new IOException("Failed to create tag.", e);
 		}
 
-		tag.read(in);
+		tag.read(dataIn);
 		return tag;
 	}
 
@@ -163,9 +164,11 @@ public class NBTIO {
 	 * @param tag Tag to write.
 	 * @throws java.io.IOException If an I/O error occurs.
 	 */
-	public static void writeTag(DataOutputStream out, Tag tag) throws IOException {
-		out.writeByte(TagRegistry.getIdFor(tag.getClass()));
-		out.writeUTF(tag.getName());
-		tag.write(out);
+	public static void writeTag(OutputStream out, Tag tag) throws IOException {
+		DataOutputStream dataOut = new DataOutputStream(out);
+
+		dataOut.writeByte(TagRegistry.getIdFor(tag.getClass()));
+		dataOut.writeUTF(tag.getName());
+		tag.write(dataOut);
 	}
 }
