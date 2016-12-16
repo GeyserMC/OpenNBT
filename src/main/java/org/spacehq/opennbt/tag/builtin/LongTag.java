@@ -1,7 +1,7 @@
 package org.spacehq.opennbt.tag.builtin;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 /**
@@ -45,12 +45,12 @@ public class LongTag extends Tag {
 	}
 
 	@Override
-	public void read(DataInputStream in) throws IOException {
+	public void read(DataInput in) throws IOException {
 		this.value = in.readLong();
 	}
 
 	@Override
-	public void write(DataOutputStream out) throws IOException {
+	public void write(DataOutput out) throws IOException {
 		out.writeLong(this.value);
 	}
 

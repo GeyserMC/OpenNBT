@@ -1,7 +1,7 @@
 package org.spacehq.opennbt.tag.builtin;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.lang.reflect.Array;
 
@@ -45,7 +45,7 @@ public abstract class Tag implements Cloneable {
 	 * @param in Stream to write to.
 	 * @throws java.io.IOException If an I/O error occurs.
 	 */
-	public abstract void read(DataInputStream in) throws IOException;
+	public abstract void read(DataInput in) throws IOException;
 
 	/**
 	 * Writes this tag to an output stream.
@@ -53,7 +53,7 @@ public abstract class Tag implements Cloneable {
 	 * @param out Stream to write to.
 	 * @throws java.io.IOException If an I/O error occurs.
 	 */
-	public abstract void write(DataOutputStream out) throws IOException;
+	public abstract void write(DataOutput out) throws IOException;
 
 	@Override
 	public abstract Tag clone();

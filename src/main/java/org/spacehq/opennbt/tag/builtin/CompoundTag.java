@@ -2,8 +2,8 @@ package org.spacehq.opennbt.tag.builtin;
 
 import org.spacehq.opennbt.NBTIO;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.*;
@@ -141,7 +141,7 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
 	}
 
 	@Override
-	public void read(DataInputStream in) throws IOException {
+	public void read(DataInput in) throws IOException {
 		List<Tag> tags = new ArrayList<Tag>();
 		try {
 			Tag tag;
@@ -158,7 +158,7 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
 	}
 
 	@Override
-	public void write(DataOutputStream out) throws IOException {
+	public void write(DataOutput out) throws IOException {
 		for(Tag tag : this.value.values()) {
 			NBTIO.writeTag(out, tag);
 		}

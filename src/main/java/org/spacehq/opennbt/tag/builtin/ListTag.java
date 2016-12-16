@@ -3,8 +3,8 @@ package org.spacehq.opennbt.tag.builtin;
 import org.spacehq.opennbt.tag.TagCreateException;
 import org.spacehq.opennbt.tag.TagRegistry;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -143,7 +143,7 @@ public class ListTag extends Tag implements Iterable<Tag> {
 	}
 
 	@Override
-	public void read(DataInputStream in) throws IOException {
+	public void read(DataInput in) throws IOException {
 		int id = in.readUnsignedByte();
 		this.type = TagRegistry.getClassFor(id);
 		this.value = new ArrayList<Tag>();
@@ -166,7 +166,7 @@ public class ListTag extends Tag implements Iterable<Tag> {
 	}
 
 	@Override
-	public void write(DataOutputStream out) throws IOException {
+	public void write(DataOutput out) throws IOException {
 		if(this.value.isEmpty()) {
 			out.writeByte(0);
 		} else {
