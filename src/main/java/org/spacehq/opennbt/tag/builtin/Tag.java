@@ -7,7 +7,7 @@ import java.lang.reflect.Array;
 
 /**
  * Represents an NBT tag.
- * <p/>
+ *
  * All tags must have a constructor with a single string parameter for reading tags (can be any visibility).
  * Tags should also have setter methods specific to their value types.
  */

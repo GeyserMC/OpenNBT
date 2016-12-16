@@ -71,6 +71,7 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
 	/**
 	 * Gets the tag with the specified name.
 	 *
+	 * @param <T>     Type of tag to get.
 	 * @param tagName Name of the tag.
 	 * @return The tag with the specified name.
 	 */
@@ -81,6 +82,7 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
 	/**
 	 * Puts the tag into this compound tag.
 	 *
+	 * @param <T> Type of tag to put.
 	 * @param tag Tag to put into this compound tag.
 	 * @return The previous tag associated with its name, or null if there wasn't one.
 	 */
@@ -91,6 +93,7 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
 	/**
 	 * Removes a tag from this compound tag.
 	 *
+	 * @param <T>     Type of tag to remove.
 	 * @param tagName Name of the tag to remove.
 	 * @return The removed tag.
 	 */

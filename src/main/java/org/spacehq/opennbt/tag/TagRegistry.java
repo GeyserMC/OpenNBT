@@ -39,6 +39,7 @@ public class TagRegistry {
 	/**
 	 * Registers a tag class.
 	 *
+	 * @param id  ID of the tag.
 	 * @param tag Tag class to register.
 	 * @throws TagRegisterException If an error occurs while registering the tag.
 	 */

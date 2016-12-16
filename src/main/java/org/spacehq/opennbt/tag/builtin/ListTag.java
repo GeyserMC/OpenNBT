@@ -120,6 +120,7 @@ public class ListTag extends Tag implements Iterable<Tag> {
 	/**
 	 * Gets the tag at the given index of this list tag.
 	 *
+	 * @param <T>   Type of tag to get
 	 * @param index Index of the tag.
 	 * @return The tag at the given index.
 	 */

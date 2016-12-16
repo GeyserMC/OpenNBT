@@ -41,6 +41,8 @@ public class ConverterRegistry {
 	/**
 	 * Registers a converter.
 	 *
+	 * @param <T>       Tag type to convert from.
+	 * @param <V>       Value type to convert to.
 	 * @param tag       Tag type class to register the converter to.
 	 * @param type      Value type class to register the converter to.
 	 * @param converter Converter to register.
@@ -62,9 +64,11 @@ public class ConverterRegistry {
 	/**
 	 * Converts the given tag to a value.
 	 *
+	 * @param <T> Tag type to convert from.
+	 * @param <V> Value type to convert to.
 	 * @param tag Tag to convert.
 	 * @return The converted value.
-	 * @throw ConversionException If a suitable converter could not be found.
+	 * @throws ConversionException If a suitable converter could not be found.
 	 */
 	public static <T extends Tag, V> V convertToValue(T tag) throws ConversionException {
 		if(tag == null || tag.getValue() == null) {
@@ -82,10 +86,12 @@ public class ConverterRegistry {
 	/**
 	 * Converts the given value to a tag.
 	 *
+	 * @param <V>   Value type to convert from.
+	 * @param <T>   Tag type to convert to.
 	 * @param name  Name of the resulting tag.
 	 * @param value Value to convert.
 	 * @return The converted tag.
-	 * @throw ConversionException If a suitable converter could not be found.
+	 * @throws ConversionException If a suitable converter could not be found.
 	 */
 	public static <V, T extends Tag> T convertToTag(String name, V value) throws ConversionException {
 		if(value == null) {
