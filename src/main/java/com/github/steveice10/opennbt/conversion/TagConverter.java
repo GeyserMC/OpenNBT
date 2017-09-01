@@ -9,20 +9,20 @@ import com.github.steveice10.opennbt.tag.builtin.Tag;
  * @param <V> Value type.
  */
 public interface TagConverter<T extends Tag, V> {
-	/**
-	 * Converts a tag to a value.
-	 *
-	 * @param tag Tag to convert.
-	 * @return The converted value.
-	 */
-	public V convert(T tag);
+    /**
+     * Converts a tag to a value.
+     *
+     * @param tag Tag to convert.
+     * @return The converted value.
+     */
+    public V convert(T tag);
 
-	/**
-	 * Converts a value to a tag.
-	 *
-	 * @param name  Name of the tag.
-	 * @param value Value to convert.
-	 * @return The converted tag.
-	 */
-	public T convert(String name, V value);
+    /**
+     * Converts a value to a tag.
+     *
+     * @param name  Name of the tag.
+     * @param value Value to convert.
+     * @return The converted tag.
+     */
+    public T convert(String name, V value);
 }
