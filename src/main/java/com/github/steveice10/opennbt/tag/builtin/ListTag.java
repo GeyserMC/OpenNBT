@@ -18,50 +18,41 @@ public class ListTag extends Tag implements Iterable<Tag> {
     private List<Tag> value;
 
     /**
-     * Creates a tag with the specified name.
+     * Creates an empty list tag with the specified name and no defined type.
      *
      * @param name The name of the tag.
      */
-    private ListTag(String name) {
+    public ListTag(String name) {
         super(name);
+
+        this.type = null;
+        this.value = new ArrayList<Tag>();
     }
 
     /**
-     * Creates a tag with the specified name.
+     * Creates an empty list tag with the specified name and type.
      *
      * @param name The name of the tag.
      * @param type Tag type of the list.
      */
     public ListTag(String name, Class<? extends Tag> type) {
-        super(name);
+        this(name);
+
         this.type = type;
-        this.value = new ArrayList<Tag>();
     }
 
     /**
-     * Creates a tag with the specified name.
+     * Creates a list tag with the specified name and value.
+     * The list tag's type will be set to that of the first tag being added, or null if the given list is empty.
      *
      * @param name  The name of the tag.
      * @param value The value of the tag.
      * @throws IllegalArgumentException If all tags in the list are not of the same type.
      */
     public ListTag(String name, List<Tag> value) throws IllegalArgumentException {
-        super(name);
-        Class<? extends Tag> type = null;
-        for(Tag tag : value) {
-            if(tag == null) {
-                throw new IllegalArgumentException("List cannot contain null tags.");
-            }
+        this(name);
 
-            if(type == null) {
-                type = tag.getClass();
-            } else if(tag.getClass() != type) {
-                throw new IllegalArgumentException("All tags must be of the same type.");
-            }
-        }
-
-        this.type = type;
-        this.value = new ArrayList<Tag>(value);
+        this.setValue(value);
     }
 
     @Override
@@ -71,41 +62,46 @@ public class ListTag extends Tag implements Iterable<Tag> {
 
     /**
      * Sets the value of this tag.
+     * The list tag's type will be set to that of the first tag being added, or null if the given list is empty.
      *
      * @param value New value of this tag.
+     * @throws IllegalArgumentException If all tags in the list are not of the same type.
      */
-    public void setValue(List<Tag> value) {
-        for(Tag tag : value) {
-            if(tag.getClass() != this.type) {
-                throw new IllegalArgumentException("Tag type cannot differ from ListTag type.");
-            }
-        }
+    public void setValue(List<Tag> value) throws IllegalArgumentException {
+        this.type = null;
+        this.value.clear();
 
-        this.value = new ArrayList<Tag>(value);
+        for(Tag tag : value) {
+            this.add(tag);
+        }
     }
 
     /**
      * Gets the element type of the ListTag.
      *
-     * @return The ListTag's element type.
+     * @return The ListTag's element type, or null if the list does not yet have a defined type.
      */
     public Class<? extends Tag> getElementType() {
         return this.type;
     }
 
     /**
-     * Adds a tag to this list tag, if the list is empty it will use the element as the list type.
+     * Adds a tag to this list tag.
+     * If the list does not yet have a type, it will be set to the type of the tag being added.
      *
-     * @param tag Tag to add.
+     * @param tag Tag to add. Should not be null.
      * @return If the list was changed as a result.
+     * @throws IllegalArgumentException If the tag's type differs from the list tag's type.
      */
-    public boolean add(Tag tag) {
-        // If empty list, use this as tag type
-        if(this.value.size() == 0) {
-            this.type = tag.getClass();
+    public boolean add(Tag tag) throws IllegalArgumentException {
+        if(tag == null) {
+            return false;
         }
 
-        if(tag.getClass() != this.type) {
+        // If empty list, use this as tag type.
+        if(this.type == null) {
+            this.type = tag.getClass();
+        } else if(tag.getClass() != this.type) {
             throw new IllegalArgumentException("Tag type cannot differ from ListTag type.");
         }
 
@@ -149,11 +145,15 @@ public class ListTag extends Tag implements Iterable<Tag> {
 
     @Override
     public void read(DataInput in) throws IOException {
+        this.type = null;
+        this.value.clear();
+
         int id = in.readUnsignedByte();
-        this.type = TagRegistry.getClassFor(id);
-        this.value = new ArrayList<Tag>();
-        if(id != 0 && this.type == null) {
-            throw new IOException("Unknown tag ID in ListTag: " + id);
+        if(id != 0) {
+            this.type = TagRegistry.getClassFor(id);
+            if(this.type == null) {
+                throw new IOException("Unknown tag ID in ListTag: " + id);
+            }
         }
 
         int count = in.readInt();
@@ -172,7 +172,7 @@ public class ListTag extends Tag implements Iterable<Tag> {
 
     @Override
     public void write(DataOutput out) throws IOException {
-        if(this.value.isEmpty()) {
+        if(this.type == null) {
             out.writeByte(0);
         } else {
             int id = TagRegistry.getIdFor(this.type);
