@@ -94,12 +94,17 @@ public class ListTag extends Tag implements Iterable<Tag> {
     }
 
     /**
-     * Adds a tag to this list tag.
+     * Adds a tag to this list tag, if the list is empty it will use the element as the list type.
      *
      * @param tag Tag to add.
      * @return If the list was changed as a result.
      */
     public boolean add(Tag tag) {
+        // If empty list, use this as tag type
+        if(this.value.size() == 0) {
+            this.type = tag.getClass();
+        }
+
         if(tag.getClass() != this.type) {
             throw new IllegalArgumentException("Tag type cannot differ from ListTag type.");
         }
