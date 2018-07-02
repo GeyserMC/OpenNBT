@@ -25,10 +25,6 @@ public class ListTagConverter implements TagConverter<ListTag, List> {
 
     @Override
     public ListTag convert(String name, List value) {
-        if(value.isEmpty()) {
-            throw new IllegalArgumentException("Cannot convert ListTag with size of 0.");
-        }
-
         List<Tag> tags = new ArrayList<Tag>();
         for(Object o : value) {
             tags.add(ConverterRegistry.convertToTag("", o));
