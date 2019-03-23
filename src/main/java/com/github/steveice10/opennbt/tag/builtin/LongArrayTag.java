@@ -1,6 +1,4 @@
-package com.github.steveice10.opennbt.tag.builtin.custom;
-
-import com.github.steveice10.opennbt.tag.builtin.Tag;
+package com.github.steveice10.opennbt.tag.builtin;
 
 import java.io.DataInput;
 import java.io.DataOutput;
