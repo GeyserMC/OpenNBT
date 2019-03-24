@@ -1,7 +1,7 @@
-package com.github.steveice10.opennbt.conversion.builtin.custom;
+package com.github.steveice10.opennbt.conversion.builtin;
 
 import com.github.steveice10.opennbt.conversion.TagConverter;
-import com.github.steveice10.opennbt.tag.builtin.custom.LongArrayTag;
+import com.github.steveice10.opennbt.tag.builtin.LongArrayTag;
 
 /**
  * A converter that converts between LongArrayTag and long[].
