@@ -7,8 +7,6 @@ import com.github.steveice10.opennbt.conversion.builtin.custom.SerializableArray
 import com.github.steveice10.opennbt.conversion.builtin.custom.SerializableTagConverter;
 import com.github.steveice10.opennbt.conversion.builtin.custom.ShortArrayTagConverter;
 import com.github.steveice10.opennbt.conversion.builtin.custom.StringArrayTagConverter;
-import com.github.steveice10.opennbt.tag.TagRegisterException;
-import com.github.steveice10.opennbt.tag.TagUnregisterException;
 import com.github.steveice10.opennbt.tag.builtin.ByteArrayTag;
 import com.github.steveice10.opennbt.tag.builtin.ByteTag;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
@@ -78,11 +76,11 @@ public class ConverterRegistry {
      */
     public static <T extends Tag, V> void register(Class<T> tag, Class<V> type, TagConverter<T, V> converter) throws ConverterRegisterException {
         if(tagToConverter.containsKey(tag)) {
-            throw new TagRegisterException("Type conversion to tag " + tag.getName() + " is already registered.");
+            throw new ConverterRegisterException("Type conversion to tag " + tag.getName() + " is already registered.");
         }
 
         if(typeToConverter.containsKey(type)) {
-            throw new TagRegisterException("Tag conversion to type " + type.getName() + " is already registered.");
+            throw new ConverterRegisterException("Tag conversion to type " + type.getName() + " is already registered.");
         }
 
         tagToConverter.put(tag, converter);
@@ -100,11 +98,11 @@ public class ConverterRegistry {
      */
     public static <T extends Tag, V> void unregister(Class<T> tag, Class<V> type) throws ConverterUnregisterException {
         if (!tagToConverter.containsKey(tag)) {
-            throw new TagUnregisterException("Type conversion to tag " + tag.getName() + " is not registered.");
+            throw new ConverterUnregisterException("Type conversion to tag " + tag.getName() + " is not registered.");
         }
 
         if (!typeToConverter.containsKey(type)) {
-            throw new TagUnregisterException("Tag conversion to type " + type.getName() + " is not registered.");
+            throw new ConverterUnregisterException("Tag conversion to type " + type.getName() + " is not registered.");
         }
 
         tagToConverter.remove(tag);
