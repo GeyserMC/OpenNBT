@@ -3,10 +3,7 @@ package com.github.steveice10.opennbt.conversion;
 import com.github.steveice10.opennbt.conversion.builtin.*;
 import com.github.steveice10.opennbt.conversion.builtin.custom.DoubleArrayTagConverter;
 import com.github.steveice10.opennbt.conversion.builtin.custom.FloatArrayTagConverter;
-import com.github.steveice10.opennbt.conversion.builtin.custom.SerializableArrayTagConverter;
-import com.github.steveice10.opennbt.conversion.builtin.custom.SerializableTagConverter;
 import com.github.steveice10.opennbt.conversion.builtin.custom.ShortArrayTagConverter;
-import com.github.steveice10.opennbt.conversion.builtin.custom.StringArrayTagConverter;
 import com.github.steveice10.opennbt.tag.builtin.ByteArrayTag;
 import com.github.steveice10.opennbt.tag.builtin.ByteTag;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
@@ -22,10 +19,7 @@ import com.github.steveice10.opennbt.tag.builtin.Tag;
 import com.github.steveice10.opennbt.tag.builtin.custom.DoubleArrayTag;
 import com.github.steveice10.opennbt.tag.builtin.custom.FloatArrayTag;
 import com.github.steveice10.opennbt.tag.builtin.LongArrayTag;
-import com.github.steveice10.opennbt.tag.builtin.custom.SerializableArrayTag;
-import com.github.steveice10.opennbt.tag.builtin.custom.SerializableTag;
 import com.github.steveice10.opennbt.tag.builtin.custom.ShortArrayTag;
-import com.github.steveice10.opennbt.tag.builtin.custom.StringArrayTag;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -58,10 +52,7 @@ public class ConverterRegistry {
 
         register(DoubleArrayTag.class, double[].class, new DoubleArrayTagConverter());
         register(FloatArrayTag.class, float[].class, new FloatArrayTagConverter());
-        register(SerializableArrayTag.class, Serializable[].class, new SerializableArrayTagConverter());
-        register(SerializableTag.class, Serializable.class, new SerializableTagConverter());
         register(ShortArrayTag.class, short[].class, new ShortArrayTagConverter());
-        register(StringArrayTag.class, String[].class, new StringArrayTagConverter());
     }
 
     /**
@@ -94,17 +85,8 @@ public class ConverterRegistry {
      * @param <V>  Value type to unregister.
      * @param tag  Tag type class to unregister.
      * @param type Value type class to unregister.
-     * @throws ConverterUnregisterException If an error occurs while unregistering the converter.
      */
-    public static <T extends Tag, V> void unregister(Class<T> tag, Class<V> type) throws ConverterUnregisterException {
-        if (!tagToConverter.containsKey(tag)) {
-            throw new ConverterUnregisterException("Type conversion to tag " + tag.getName() + " is not registered.");
-        }
-
-        if (!typeToConverter.containsKey(type)) {
-            throw new ConverterUnregisterException("Tag conversion to type " + type.getName() + " is not registered.");
-        }
-
+    public static <T extends Tag, V> void unregister(Class<T> tag, Class<V> type) {
         tagToConverter.remove(tag);
         typeToConverter.remove(type);
     }

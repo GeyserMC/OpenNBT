@@ -15,10 +15,7 @@ import com.github.steveice10.opennbt.tag.builtin.Tag;
 import com.github.steveice10.opennbt.tag.builtin.custom.DoubleArrayTag;
 import com.github.steveice10.opennbt.tag.builtin.custom.FloatArrayTag;
 import com.github.steveice10.opennbt.tag.builtin.LongArrayTag;
-import com.github.steveice10.opennbt.tag.builtin.custom.SerializableArrayTag;
-import com.github.steveice10.opennbt.tag.builtin.custom.SerializableTag;
 import com.github.steveice10.opennbt.tag.builtin.custom.ShortArrayTag;
-import com.github.steveice10.opennbt.tag.builtin.custom.StringArrayTag;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -47,10 +44,7 @@ public class TagRegistry {
 
         register(60, DoubleArrayTag.class);
         register(61, FloatArrayTag.class);
-        register(63, SerializableArrayTag.class);
-        register(64, SerializableTag.class);
         register(65, ShortArrayTag.class);
-        register(66, StringArrayTag.class);
     }
 
     /**
@@ -77,13 +71,8 @@ public class TagRegistry {
      * Unregisters a tag class.
      *
      * @param id  ID of the tag to unregister.
-     * @throws TagUnregisterException If an error occurs while unregistering the tag.
      */
-    public static void unregister(int id) throws TagUnregisterException {
-        if(!idToTag.containsKey(id)) {
-            throw new TagUnregisterException("Tag ID \"" + id + "\" isn't registered.");
-        }
-
+    public static void unregister(int id) {
         tagToId.remove(getClassFor(id));
         idToTag.remove(id);
     }
