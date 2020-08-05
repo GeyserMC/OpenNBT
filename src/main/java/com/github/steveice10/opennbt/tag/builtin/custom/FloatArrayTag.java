@@ -1,15 +1,17 @@
 package com.github.steveice10.opennbt.tag.builtin.custom;
 
-import com.github.steveice10.opennbt.tag.builtin.Tag;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+
+import com.github.steveice10.opennbt.tag.builtin.StringifyableValueTag;
+import com.github.steveice10.opennbt.tag.builtin.Tag;
 
 /**
  * A tag containing a float array.
  */
-public class FloatArrayTag extends Tag {
+public class FloatArrayTag extends Tag implements StringifyableValueTag {
     private float[] value;
 
     /**
@@ -93,6 +95,27 @@ public class FloatArrayTag extends Tag {
         for(int index = 0; index < this.value.length; index++) {
             out.writeFloat(this.value[index]);
         }
+    }
+
+    @Override
+    public void destringify(String in) {
+        String[] valueStrings = in.substring(in.indexOf(';') + 1, in.length() - 1).replaceAll(" ", "").split(",");
+        value = new float[valueStrings.length];
+        for(int i = 0; i < value.length; i++) {
+            value[i] = Float.parseFloat(valueStrings[i]);
+        }
+    }
+
+    @Override
+    public void stringify(OutputStreamWriter out) throws IOException {
+        StringBuilder sb = new StringBuilder("[F;");
+        for(float b : value) {
+            sb.append(b);
+            sb.append(',');
+        }
+        sb.setLength(sb.length() - 1);
+        sb.append(']');
+        out.append(sb.toString());
     }
 
     @Override

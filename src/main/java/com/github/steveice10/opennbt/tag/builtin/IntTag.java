@@ -3,11 +3,12 @@ package com.github.steveice10.opennbt.tag.builtin;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 /**
  * A tag containing an integer.
  */
-public class IntTag extends Tag {
+public class IntTag extends Tag implements StringifyableValueTag {
     private int value;
 
     /**
@@ -52,6 +53,19 @@ public class IntTag extends Tag {
     @Override
     public void write(DataOutput out) throws IOException {
         out.writeInt(this.value);
+    }
+
+    @Override
+    public void destringify(String in) {
+        String valueString = in;
+        value = Integer.parseInt(valueString);
+    }
+
+    @Override
+    public void stringify(OutputStreamWriter out) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        sb.append(value);
+        out.append(sb.toString());
     }
 
     @Override

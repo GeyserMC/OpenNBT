@@ -3,11 +3,12 @@ package com.github.steveice10.opennbt.tag.builtin;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 /**
  * A tag containing a double.
  */
-public class DoubleTag extends Tag {
+public class DoubleTag extends Tag implements StringifyableValueTag {
     private double value;
 
     /**
@@ -52,6 +53,20 @@ public class DoubleTag extends Tag {
     @Override
     public void write(DataOutput out) throws IOException {
         out.writeDouble(this.value);
+    }
+
+    @Override
+    public void destringify(String in) {
+        String valueString = in.toLowerCase().substring(0, in.length() - 1);
+        value = Double.parseDouble(valueString);
+    }
+
+    @Override
+    public void stringify(OutputStreamWriter out) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        sb.append(value);
+        sb.append('d');
+        out.append(sb.toString());
     }
 
     @Override

@@ -3,11 +3,12 @@ package com.github.steveice10.opennbt.tag.builtin;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 /**
  * A tag containing a string.
  */
-public class StringTag extends Tag {
+public class StringTag extends Tag implements StringifyableValueTag {
     private String value;
 
     /**
@@ -52,6 +53,43 @@ public class StringTag extends Tag {
     @Override
     public void write(DataOutput out) throws IOException {
         out.writeUTF(this.value);
+    }
+
+    @Override
+    public void destringify(String in) {
+        if(in.charAt(0) == '"') {
+            value = in.substring(1, in.length() - 1).replaceAll("\\\\\"", "\"");
+        } else if(in.charAt(0) == '\'') {
+            value = in.substring(1, in.length() - 1).replaceAll("\\\'", "'");
+        } else {
+            value = in;
+        }
+    }
+
+    @Override
+    public void stringify(OutputStreamWriter out) throws IOException {
+        if(value.matches("(?!\\d+)[\\w\\d]*")) {
+            out.append(value);
+            return;
+        }
+        if(value.contains("\"")) {
+            if(value.contains("'")) {
+                StringBuilder sb = new StringBuilder("\"");
+                sb.append(value.replaceAll("\"", "\\\""));
+                sb.append("\"");
+                out.append(sb.toString());
+                return;
+            }
+            StringBuilder sb = new StringBuilder("'");
+            sb.append(value);
+            sb.append("'");
+            out.append(sb.toString());
+            return;
+        }
+        StringBuilder sb = new StringBuilder("\"");
+        sb.append(value);
+        sb.append("\"");
+        out.append(sb.toString());
     }
 
     @Override

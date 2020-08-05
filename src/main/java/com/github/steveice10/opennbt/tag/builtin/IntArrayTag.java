@@ -3,11 +3,12 @@ package com.github.steveice10.opennbt.tag.builtin;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 /**
  * A tag containing an integer array.
  */
-public class IntArrayTag extends Tag {
+public class IntArrayTag extends Tag implements StringifyableValueTag {
     private int[] value;
 
     /**
@@ -91,6 +92,27 @@ public class IntArrayTag extends Tag {
         for(int index = 0; index < this.value.length; index++) {
             out.writeInt(this.value[index]);
         }
+    }
+
+    @Override
+    public void destringify(String in) {
+        String[] valueStrings = in.substring(in.indexOf(';') + 1, in.length() - 1).replaceAll(" ", "").split(",");
+        value = new int[valueStrings.length];
+        for(int i = 0; i < value.length; i++) {
+            value[i] = Integer.parseInt(valueStrings[i]);
+        }
+    }
+
+    @Override
+    public void stringify(OutputStreamWriter out) throws IOException {
+        StringBuilder sb = new StringBuilder("[I;");
+        for(int b : value) {
+            sb.append(b);
+            sb.append(',');
+        }
+        sb.setLength(sb.length() - 1);
+        sb.append(']');
+        out.append(sb.toString());
     }
 
     @Override

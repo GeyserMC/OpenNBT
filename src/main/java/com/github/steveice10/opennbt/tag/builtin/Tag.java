@@ -3,6 +3,8 @@ package com.github.steveice10.opennbt.tag.builtin;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.lang.reflect.Array;
 
 /**
@@ -42,7 +44,7 @@ public abstract class Tag implements Cloneable {
     /**
      * Reads this tag from an input stream.
      *
-     * @param in Stream to write to.
+     * @param in Stream to read from.
      * @throws java.io.IOException If an I/O error occurs.
      */
     public abstract void read(DataInput in) throws IOException;

@@ -1,11 +1,13 @@
 package com.github.steveice10.opennbt.tag.builtin;
 
+import com.github.steveice10.opennbt.SNBTIO;
 import com.github.steveice10.opennbt.tag.TagCreateException;
 import com.github.steveice10.opennbt.tag.TagRegistry;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -187,6 +189,31 @@ public class ListTag extends Tag implements Iterable<Tag> {
         for(Tag tag : this.value) {
             tag.write(out);
         }
+    }
+    
+    public void stringify(OutputStreamWriter out, boolean linebreak, int depth) throws IOException {
+        out.append('[');
+        
+        boolean first = true;
+        for(Tag t: value) {
+            if(first) {
+                first = false;
+            } else {
+                out.append(',');
+                if(!linebreak) {
+                    out.append(' ');
+                }
+            }
+            SNBTIO.writeTag(out, t, linebreak, depth + 1);
+        }
+        
+        if(linebreak) {
+            out.append('\n');
+            for(int i = 0; i < depth; i++) {
+                out.append('\t');
+            }
+        }
+        out.append(']');
     }
 
     @Override

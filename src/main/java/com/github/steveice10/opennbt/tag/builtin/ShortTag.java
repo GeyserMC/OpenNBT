@@ -3,11 +3,12 @@ package com.github.steveice10.opennbt.tag.builtin;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 /**
  * A tag containing a short.
  */
-public class ShortTag extends Tag {
+public class ShortTag extends Tag implements StringifyableValueTag {
     private short value;
 
     /**
@@ -52,6 +53,20 @@ public class ShortTag extends Tag {
     @Override
     public void write(DataOutput out) throws IOException {
         out.writeShort(this.value);
+    }
+
+    @Override
+    public void destringify(String in) {
+        String valueString = in.toLowerCase().substring(0, in.length() - 1);
+        value = Short.parseShort(valueString);
+    }
+
+    @Override
+    public void stringify(OutputStreamWriter out) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        sb.append(value);
+        sb.append('s');
+        out.append(sb.toString());
     }
 
     @Override

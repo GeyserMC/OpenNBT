@@ -3,11 +3,12 @@ package com.github.steveice10.opennbt.tag.builtin;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 /**
  * A tag containing a byte array.
  */
-public class ByteArrayTag extends Tag {
+public class ByteArrayTag extends Tag implements StringifyableValueTag {
     private byte[] value;
 
     /**
@@ -87,6 +88,27 @@ public class ByteArrayTag extends Tag {
     public void write(DataOutput out) throws IOException {
         out.writeInt(this.value.length);
         out.write(this.value);
+    }
+
+    @Override
+    public void destringify(String in) {
+        String[] valueStrings = in.substring(in.indexOf(';') + 1, in.length() - 1).replaceAll(" ", "").split(",");
+        value = new byte[valueStrings.length];
+        for(int i = 0; i < value.length; i++) {
+            value[i] = Byte.parseByte(valueStrings[i]);
+        }
+    }
+
+    @Override
+    public void stringify(OutputStreamWriter out) throws IOException {
+        StringBuilder sb = new StringBuilder("[B;");
+        for(byte b : value) {
+            sb.append(b);
+            sb.append(',');
+        }
+        sb.setLength(sb.length() - 1);
+        sb.append(']');
+        out.append(sb.toString());
     }
 
     @Override
