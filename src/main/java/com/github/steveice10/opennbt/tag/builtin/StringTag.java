@@ -60,7 +60,7 @@ public class StringTag extends Tag implements StringifyableValueTag {
         if(in.charAt(0) == '"') {
             value = in.substring(1, in.length() - 1).replaceAll("\\\\\"", "\"");
         } else if(in.charAt(0) == '\'') {
-            value = in.substring(1, in.length() - 1).replaceAll("\\\'", "'");
+            value = in.substring(1, in.length() - 1).replaceAll("\\\\\'", "'");
         } else {
             value = in;
         }
@@ -75,7 +75,7 @@ public class StringTag extends Tag implements StringifyableValueTag {
         if(value.contains("\"")) {
             if(value.contains("'")) {
                 StringBuilder sb = new StringBuilder("\"");
-                sb.append(value.replaceAll("\"", "\\\""));
+                sb.append(value.replaceAll("\"", "\\\\\""));
                 sb.append("\"");
                 out.append(sb.toString());
                 return;
