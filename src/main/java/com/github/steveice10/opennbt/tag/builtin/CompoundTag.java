@@ -4,7 +4,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.EOFException;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -15,8 +14,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.github.steveice10.opennbt.NBTIO;
-import com.github.steveice10.opennbt.SNBTIO;
 import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTWriter;
 
 /**
  * A compound tag containing other tags.
@@ -198,7 +197,7 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
     }
     
     @Override
-    public void stringify(OutputStreamWriter out, boolean linebreak, int depth) throws IOException {
+    public void stringify(StringifiedNBTWriter out, boolean linebreak, int depth) throws IOException {
         out.append('{');
         
         boolean first = true;
@@ -211,14 +210,12 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
                     out.append(' ');
                 }
             }
-            SNBTIO.writeTag(out, t, linebreak, depth + 1);
+            out.writeTag(t, linebreak, depth + 1);
         }
         
         if(linebreak) {
             out.append('\n');
-            for(int i = 0; i < depth; i++) {
-                out.append('\t');
-            }
+            out.indent(depth);
         }
         out.append('}');
     }

@@ -3,9 +3,9 @@ package com.github.steveice10.opennbt.tag.builtin;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 
 import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTWriter;
 
 /**
  * A tag containing an integer.
@@ -64,7 +64,7 @@ public class IntTag extends Tag {
     }
 
     @Override
-    public void stringify(OutputStreamWriter out, boolean linebreak, int depth) throws IOException {
+    public void stringify(StringifiedNBTWriter out, boolean linebreak, int depth) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append(value);
         out.append(sb.toString());

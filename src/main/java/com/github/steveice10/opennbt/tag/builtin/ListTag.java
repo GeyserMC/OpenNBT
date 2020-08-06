@@ -1,17 +1,16 @@
 package com.github.steveice10.opennbt.tag.builtin;
 
-import com.github.steveice10.opennbt.SNBTIO;
-import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
-import com.github.steveice10.opennbt.tag.TagCreateException;
-import com.github.steveice10.opennbt.tag.TagRegistry;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTWriter;
+import com.github.steveice10.opennbt.tag.TagCreateException;
+import com.github.steveice10.opennbt.tag.TagRegistry;
 
 /**
  * A tag containing a list of tags.
@@ -205,7 +204,7 @@ public class ListTag extends Tag implements Iterable<Tag> {
         }
     }
     
-    public void stringify(OutputStreamWriter out, boolean linebreak, int depth) throws IOException {
+    public void stringify(StringifiedNBTWriter out, boolean linebreak, int depth) throws IOException {
         out.append('[');
         
         boolean first = true;
@@ -218,14 +217,12 @@ public class ListTag extends Tag implements Iterable<Tag> {
                     out.append(' ');
                 }
             }
-            SNBTIO.writeTag(out, t, linebreak, depth + 1);
+            out.writeTag(t, linebreak, depth + 1);
         }
         
         if(linebreak) {
             out.append('\n');
-            for(int i = 0; i < depth; i++) {
-                out.append('\t');
-            }
+            out.indent(depth);
         }
         out.append(']');
     }

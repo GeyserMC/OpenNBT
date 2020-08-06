@@ -122,7 +122,7 @@ public class SNBTIO {
     /**
      * Reads a stringified NBT tag.
      *
-     * @param in           Input stream to read from.
+     * @param in Input stream to read from.
      * @return The read tag, or null if the tag is an end tag.
      * @throws java.io.IOException If an I/O error occurs.
      */
@@ -132,7 +132,7 @@ public class SNBTIO {
         reader.close();
         return t;
     }
-    
+
     /**
      * Writes a stringified NBT tag.
      *
@@ -153,48 +153,11 @@ public class SNBTIO {
      * @throws java.io.IOException If an I/O error occurs.
      */
     public static void writeTag(OutputStream out, Tag tag, boolean linebreak) throws IOException {
-        OutputStreamWriter writer = new OutputStreamWriter(out);
-        writeTag(writer, tag, linebreak, 0);
-        writer.flush();
-    }
-    
-    public static Pattern nonEscapedTagName = Pattern.compile("(?!\\d+)[\\w\\d]*");
-    
-    public static void appendTagName(OutputStreamWriter out, String tagName) throws IOException {
-        if(!nonEscapedTagName.matcher(tagName).matches()) {
-            out.append('"');
-            out.append(tagName.replaceAll("\\\"", "\\\""));
-            out.append('"');
-        } else {
-            out.append(tagName);
-        }
-    }
-    
-    public static void writeTag(OutputStreamWriter out, Tag tag, boolean linebreak, int depth) throws IOException {
-        if(linebreak && depth > 0) {
-            out.append('\n');
-            indent(out, depth);
-        }
-        
-        if(tag.getName() != null && !tag.getName().equals("")) {
-            appendTagName(out, tag.getName());
-            
-            out.append(':');
-            out.append(' ');
-        }
-        
-        if(tag instanceof CompoundTag) {
-            ((CompoundTag) tag).stringify(out, linebreak, depth);
-        } else if(tag instanceof ListTag) {
-            ((ListTag) tag).stringify(out, linebreak, depth);
-        } else {
-            tag.stringify(out, linebreak, depth);
-        }
+        StringifiedNBTWriter writer = new StringifiedNBTWriter(out);
+        writer.writeTag(tag, linebreak);
+        writer.close();
     }
 
-    
-    
-    
     public static class StringifiedNBTReader extends PushbackReader {
         public StringifiedNBTReader(InputStream in) {
             super(new InputStreamReader(in), 32);
@@ -210,18 +173,18 @@ public class SNBTIO {
                 return readPrimitiveTag(name);
             }
         }
-        
+
         public Tag readCompoundTag(String name) throws IOException {
             return parseTag(new CompoundTag(name));
         }
-        
+
         private Tag readListOrArrayTag(String name) throws IOException {
             readSkipWhitespace();
             char idChar = readSkipWhitespace();
             char separatorChar = readSkipWhitespace();
             unread(separatorChar);
             unread(idChar);
-            
+
             if(separatorChar == ';') {
                 unread('[');
                 switch(idChar) {
@@ -252,13 +215,13 @@ public class SNBTIO {
             // This is a list tag
             return parseTag(new ListTag(name));
         }
-        
+
         private Tag readPrimitiveTag(String name) throws IOException {
             String valueString = readNextSingleValueString();
             unread(valueString.toCharArray());
             return parseTag(getTagForStringifiedValue(name, valueString));
         }
-        
+
         public String readNextSingleValueString() throws IOException {
             String valueString;
             if(lookAhead(1) == '\'' || lookAhead(1) == '\"') {
@@ -276,7 +239,7 @@ public class SNBTIO {
         static final Pattern intTagValuePattern = Pattern.compile("[-+]?\\d+");
         static final Pattern longTagValuePattern = Pattern.compile("[-+]?\\d+[lL]");
         static final Pattern shortTagValuePattern = Pattern.compile("[-+]?\\d+[sS]");
-        
+
         private Tag getTagForStringifiedValue(String name, String stringifiedValue) {
             if(byteTagValuePattern.matcher(stringifiedValue).matches()) {
                 // Byte
@@ -363,9 +326,55 @@ public class SNBTIO {
         }
     }
 
-    private static void indent(OutputStreamWriter out, int depth) throws IOException {
-        for(int i = 0; i < depth; i++) {
-            out.append('\t');
+    public static class StringifiedNBTWriter extends OutputStreamWriter {
+
+        public StringifiedNBTWriter(OutputStream out) {
+            super(out);
+        }
+
+        public void writeTag(Tag tag, boolean linebreak) throws IOException {
+            writeTag(tag, linebreak, 0);
+            flush();
+        }
+
+        public void writeTag(Tag tag, boolean linebreak, int depth) throws IOException {
+            if(linebreak && depth > 0) {
+                append('\n');
+                indent(depth);
+            }
+
+            if(tag.getName() != null && !tag.getName().equals("")) {
+                appendTagName(tag.getName());
+
+                append(':');
+                append(' ');
+            }
+
+            if(tag instanceof CompoundTag) {
+                tag.stringify(this, linebreak, depth);
+            } else if(tag instanceof ListTag) {
+                tag.stringify(this, linebreak, depth);
+            } else {
+                tag.stringify(this, linebreak, depth);
+            }
+        }
+
+        public static Pattern nonEscapedTagName = Pattern.compile("(?!\\d+)[\\w\\d]*");
+
+        public void appendTagName(String tagName) throws IOException {
+            if(!nonEscapedTagName.matcher(tagName).matches()) {
+                append('"');
+                append(tagName.replaceAll("\\\"", "\\\""));
+                append('"');
+            } else {
+                append(tagName);
+            }
+        }
+
+        public void indent(int depth) throws IOException {
+            for(int i = 0; i < depth; i++) {
+                append('\t');
+            }
         }
     }
 }

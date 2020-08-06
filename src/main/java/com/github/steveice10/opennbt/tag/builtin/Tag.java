@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Array;
 
 import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTWriter;
 
 /**
  * Represents an NBT tag.
@@ -68,7 +69,7 @@ public abstract class Tag implements Cloneable {
     /**
      * Write this tag as stringified NBT.
      */
-    public abstract void stringify(OutputStreamWriter out, boolean linebreak, int depth) throws IOException;
+    public abstract void stringify(StringifiedNBTWriter out, boolean linebreak, int depth) throws IOException;
 
     @Override
     public abstract Tag clone();
