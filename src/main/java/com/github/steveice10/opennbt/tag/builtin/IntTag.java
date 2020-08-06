@@ -5,10 +5,12 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
+
 /**
  * A tag containing an integer.
  */
-public class IntTag extends Tag implements StringifyableValueTag {
+public class IntTag extends Tag {
     private int value;
 
     /**
@@ -56,13 +58,13 @@ public class IntTag extends Tag implements StringifyableValueTag {
     }
 
     @Override
-    public void destringify(String in) {
-        String valueString = in;
-        value = Integer.parseInt(valueString);
+    public void destringify(StringifiedNBTReader in) throws IOException {
+        String s = in.readNextSingleValueString();
+        value = Integer.parseInt(s);
     }
 
     @Override
-    public void stringify(OutputStreamWriter out) throws IOException {
+    public void stringify(OutputStreamWriter out, boolean linebreak, int depth) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append(value);
         out.append(sb.toString());

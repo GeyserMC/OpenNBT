@@ -5,10 +5,12 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
+
 /**
  * A tag containing a byte.
  */
-public class ByteTag extends Tag implements StringifyableValueTag {
+public class ByteTag extends Tag {
     private byte value;
 
     /**
@@ -56,13 +58,14 @@ public class ByteTag extends Tag implements StringifyableValueTag {
     }
 
     @Override
-    public void destringify(String in) {
-        String valueString = in.toLowerCase().substring(0, in.length() - 1);
-        value = Byte.parseByte(valueString);
+    public void destringify(StringifiedNBTReader in) throws IOException {
+        String s = in.readNextSingleValueString();
+        s = s.toLowerCase().substring(0, s.length() - 1);
+        value = Byte.parseByte(s);
     }
 
     @Override
-    public void stringify(OutputStreamWriter out) throws IOException {
+    public void stringify(OutputStreamWriter out, boolean linebreak, int depth) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append(value);
         sb.append('b');

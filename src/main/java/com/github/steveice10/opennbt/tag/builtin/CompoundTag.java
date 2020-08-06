@@ -16,6 +16,7 @@ import java.util.Set;
 
 import com.github.steveice10.opennbt.NBTIO;
 import com.github.steveice10.opennbt.SNBTIO;
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
 
 /**
  * A compound tag containing other tags.
@@ -174,6 +175,29 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
         out.writeByte(0);
     }
     
+    @Override
+    public void destringify(StringifiedNBTReader in) throws IOException {
+        in.readSkipWhitespace();
+        while(true) {
+            String tagName = "";
+            if((tagName += in.readSkipWhitespace()).equals("\"")) {
+                tagName = in.readUntil(false, '"');
+                in.read();
+            }
+            tagName += in.readUntil(false, ':');
+            in.read();
+
+            put(in.readNextTag(tagName));
+
+            char endChar = in.readSkipWhitespace();
+            if(endChar == ',')
+                continue;
+            if(endChar == '}')
+                break;
+        }
+    }
+    
+    @Override
     public void stringify(OutputStreamWriter out, boolean linebreak, int depth) throws IOException {
         out.append('{');
         

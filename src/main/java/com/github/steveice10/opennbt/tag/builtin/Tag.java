@@ -3,9 +3,10 @@ package com.github.steveice10.opennbt.tag.builtin;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Array;
+
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
 
 /**
  * Represents an NBT tag.
@@ -56,6 +57,18 @@ public abstract class Tag implements Cloneable {
      * @throws java.io.IOException If an I/O error occurs.
      */
     public abstract void write(DataOutput out) throws IOException;
+    
+    /**
+     * Parses this tag from stringified NBT.
+     *
+     * @param in String to parse.
+     */
+    public abstract void destringify(StringifiedNBTReader in) throws IOException;
+
+    /**
+     * Write this tag as stringified NBT.
+     */
+    public abstract void stringify(OutputStreamWriter out, boolean linebreak, int depth) throws IOException;
 
     @Override
     public abstract Tag clone();

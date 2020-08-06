@@ -5,13 +5,13 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import com.github.steveice10.opennbt.tag.builtin.StringifyableValueTag;
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
 import com.github.steveice10.opennbt.tag.builtin.Tag;
 
 /**
  * A tag containing a double array.
  */
-public class DoubleArrayTag extends Tag implements StringifyableValueTag {
+public class DoubleArrayTag extends Tag {
     private double[] value;
 
     /**
@@ -98,8 +98,9 @@ public class DoubleArrayTag extends Tag implements StringifyableValueTag {
     }
 
     @Override
-    public void destringify(String in) {
-        String[] valueStrings = in.substring(in.indexOf(';') + 1, in.length() - 1).replaceAll(" ", "").split(",");
+    public void destringify(StringifiedNBTReader in) throws IOException {
+        String s = in.readUntil(true, ']');
+        String[] valueStrings = s.substring(s.indexOf(';') + 1, s.length() - 1).replaceAll(" ", "").split(",");
         value = new double[valueStrings.length];
         for(int i = 0; i < value.length; i++) {
             value[i] = Double.parseDouble(valueStrings[i]);
@@ -107,7 +108,7 @@ public class DoubleArrayTag extends Tag implements StringifyableValueTag {
     }
 
     @Override
-    public void stringify(OutputStreamWriter out) throws IOException {
+    public void stringify(OutputStreamWriter out, boolean linebreak, int depth) throws IOException {
         StringBuilder sb = new StringBuilder("[D; ");
         for(double b : value) {
             sb.append(b);

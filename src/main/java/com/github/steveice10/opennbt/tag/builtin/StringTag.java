@@ -5,10 +5,12 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
+
 /**
  * A tag containing a string.
  */
-public class StringTag extends Tag implements StringifyableValueTag {
+public class StringTag extends Tag {
     private String value;
 
     /**
@@ -56,18 +58,19 @@ public class StringTag extends Tag implements StringifyableValueTag {
     }
 
     @Override
-    public void destringify(String in) {
-        if(in.charAt(0) == '"') {
-            value = in.substring(1, in.length() - 1).replaceAll("\\\\\"", "\"");
-        } else if(in.charAt(0) == '\'') {
-            value = in.substring(1, in.length() - 1).replaceAll("\\\\\'", "'");
+    public void destringify(StringifiedNBTReader in) throws IOException {
+        String s = in.readNextSingleValueString();
+        if(s.charAt(0) == '"') {
+            value = s.substring(1, s.length() - 1).replaceAll("\\\\\"", "\"");
+        } else if(s.charAt(0) == '\'') {
+            value = s.substring(1, s.length() - 1).replaceAll("\\\\\'", "'");
         } else {
-            value = in;
+            value = s;
         }
     }
 
     @Override
-    public void stringify(OutputStreamWriter out) throws IOException {
+    public void stringify(OutputStreamWriter out, boolean linebreak, int depth) throws IOException {
         if(value.matches("(?!\\d+)[\\w\\d]*")) {
             out.append(value);
             return;

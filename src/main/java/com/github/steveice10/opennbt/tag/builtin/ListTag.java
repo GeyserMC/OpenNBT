@@ -1,6 +1,7 @@
 package com.github.steveice10.opennbt.tag.builtin;
 
 import com.github.steveice10.opennbt.SNBTIO;
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
 import com.github.steveice10.opennbt.tag.TagCreateException;
 import com.github.steveice10.opennbt.tag.TagRegistry;
 
@@ -188,6 +189,19 @@ public class ListTag extends Tag implements Iterable<Tag> {
         out.writeInt(this.value.size());
         for(Tag tag : this.value) {
             tag.write(out);
+        }
+    }
+    
+    @Override
+    public void destringify(StringifiedNBTReader in) throws IOException {
+        while(true) {
+            add(in.readNextTag(""));
+
+            char endChar = in.readSkipWhitespace();
+            if(endChar == ',')
+                continue;
+            if(endChar == ']')
+                break;
         }
     }
     

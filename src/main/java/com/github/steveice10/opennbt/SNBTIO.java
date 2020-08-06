@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PushbackReader;
-import java.io.Reader;
 import java.util.regex.Pattern;
 
 import com.github.steveice10.opennbt.tag.builtin.ByteArrayTag;
@@ -25,7 +24,6 @@ import com.github.steveice10.opennbt.tag.builtin.LongArrayTag;
 import com.github.steveice10.opennbt.tag.builtin.LongTag;
 import com.github.steveice10.opennbt.tag.builtin.ShortTag;
 import com.github.steveice10.opennbt.tag.builtin.StringTag;
-import com.github.steveice10.opennbt.tag.builtin.StringifyableValueTag;
 import com.github.steveice10.opennbt.tag.builtin.Tag;
 import com.github.steveice10.opennbt.tag.builtin.custom.DoubleArrayTag;
 import com.github.steveice10.opennbt.tag.builtin.custom.FloatArrayTag;
@@ -129,7 +127,10 @@ public class SNBTIO {
      * @throws java.io.IOException If an I/O error occurs.
      */
     public static Tag readTag(InputStream in) throws IOException {
-        return readTag(new PushbackReader(new InputStreamReader(in), 8), "");
+        StringifiedNBTReader reader = new StringifiedNBTReader(in);
+        Tag t = reader.readNextTag("");
+        reader.close();
+        return t;
     }
     
     /**
@@ -156,15 +157,16 @@ public class SNBTIO {
         writeTag(writer, tag, linebreak, 0);
         writer.flush();
     }
-
-    private static Tag readTag(PushbackReader in, String name) throws IOException {
-        skipWhitespace(in);
-        if(lookAhead(in, 1) == '{') {
-            return readCompoundTag(in, name);
-        } else if(lookAhead(in, 1) == '[') {
-            return readListOrArrayTag(in, name);
+    
+    public static Pattern nonEscapedTagName = Pattern.compile("(?!\\d+)[\\w\\d]*");
+    
+    public static void appendTagName(OutputStreamWriter out, String tagName) throws IOException {
+        if(!nonEscapedTagName.matcher(tagName).matches()) {
+            out.append('"');
+            out.append(tagName.replaceAll("\\\"", "\\\""));
+            out.append('"');
         } else {
-            return readPrimitiveTag(in, name);
+            out.append(tagName);
         }
     }
     
@@ -186,193 +188,179 @@ public class SNBTIO {
         } else if(tag instanceof ListTag) {
             ((ListTag) tag).stringify(out, linebreak, depth);
         } else {
-            ((StringifyableValueTag) tag).stringify(out);
+            tag.stringify(out, linebreak, depth);
         }
     }
 
-    private static Tag readCompoundTag(PushbackReader in, String name) throws IOException {
-        readSkipWhitespace(in);
-        CompoundTag compoundTag = new CompoundTag(name);
-        while(true) {
-            String tagName = "";
-            if((tagName += readSkipWhitespace(in)).equals("\"")) {
-                tagName = readStringUntil(in, false, '"');
-            }
-            tagName += readStringUntil(in, false, ':');
-            
-            compoundTag.put(readTag(in, tagName));
-
-            char endChar = readSkipWhitespace(in);
-            if(endChar == ',')
-                continue;
-            if(endChar == '}')
-                break;
-        }
-        return compoundTag;
-    }
     
-    static Pattern nonEscapedTagName = Pattern.compile("(?!\\d+)[\\w\\d]*");
     
-    private static void appendTagName(OutputStreamWriter out, String tagName) throws IOException {
-        if(!nonEscapedTagName.matcher(tagName).matches()) {
-            out.append('"');
-            out.append(tagName.replaceAll("\\\"", "\\\""));
-            out.append('"');
-        } else {
-            out.append(tagName);
+    
+    public static class StringifiedNBTReader extends PushbackReader {
+        public StringifiedNBTReader(InputStream in) {
+            super(new InputStreamReader(in), 32);
         }
-    }
 
-    private static Tag readListOrArrayTag(PushbackReader in, String name) throws IOException {
-        readSkipWhitespace(in);
-        char idChar = readSkipWhitespace(in);
-        char separatorChar = readSkipWhitespace(in);
-
-        if(separatorChar == ';') {
-            switch(idChar) {
-            case 'B':
-                // Byte array
-                return parseValueTag(new ByteArrayTag(name), "[B;" + readStringUntil(in, true, ']'));
-            case 'S':
-                // Short array
-                return parseValueTag(new ShortArrayTag(name), "[S;" + readStringUntil(in, true, ']'));
-            case 'I':
-                // Integer array
-                return parseValueTag(new IntArrayTag(name), "[I;" + readStringUntil(in, true, ']'));
-            case 'L':
-                // Long array
-                return parseValueTag(new LongArrayTag(name), "[L;" + readStringUntil(in, true, ']'));
-            case 'F':
-                // Float array
-                return parseValueTag(new FloatArrayTag(name), "[F;" + readStringUntil(in, true, ']'));
-            case 'D':
-                // Double array
-                return parseValueTag(new DoubleArrayTag(name), "[D;" + readStringUntil(in, true, ']'));
-            default:
-                // Treat as list tag
-                break;
+        public Tag readNextTag(String name) throws IOException {
+            skipWhitespace();
+            if(lookAhead(1) == '{') {
+                return readCompoundTag(name);
+            } else if(lookAhead(1) == '[') {
+                return readListOrArrayTag(name);
+            } else {
+                return readPrimitiveTag(name);
             }
         }
         
-        in.unread(separatorChar);
-        in.unread(idChar);
-        // This is a list tag
-        ListTag listTag = new ListTag(name);
-        while(true) {
-            listTag.add(readTag(in, ""));
-
-            char endChar = readSkipWhitespace(in);
-            if(endChar == ',')
-                continue;
-            if(endChar == ']')
-                break;
+        public Tag readCompoundTag(String name) throws IOException {
+            return parseTag(new CompoundTag(name));
         }
-        return listTag;
-    }
+        
+        private Tag readListOrArrayTag(String name) throws IOException {
+            readSkipWhitespace();
+            char idChar = readSkipWhitespace();
+            char separatorChar = readSkipWhitespace();
+            unread(separatorChar);
+            unread(idChar);
+            
+            if(separatorChar == ';') {
+                unread('[');
+                switch(idChar) {
+                case 'B':
+                    // Byte array
+                    return parseTag(new ByteArrayTag(name));
+                case 'S':
+                    // Short array
+                    return parseTag(new ShortArrayTag(name));
+                case 'I':
+                    // Integer array
+                    return parseTag(new IntArrayTag(name));
+                case 'L':
+                    // Long array
+                    return parseTag(new LongArrayTag(name));
+                case 'F':
+                    // Float array
+                    return parseTag(new FloatArrayTag(name));
+                case 'D':
+                    // Double array
+                    return parseTag(new DoubleArrayTag(name));
+                default:
+                    // Treat as list tag
+                    break;
+                }
+            }
 
-    private static Tag readPrimitiveTag(PushbackReader in, String name) throws IOException {
-        String valueString;
-        if(lookAhead(in, 1) == '\'' || lookAhead(in, 1) == '\"') {
-            char c = (char) in.read();
-            valueString = c + readStringUntil(in, true, c);
-        } else {
-            valueString = readStringUntil(in, true, ',', '}', ']', '\r', '\n', '\t');
-            in.unread(valueString.charAt(valueString.length() - 1));
-            valueString = valueString.substring(0, valueString.length() - 1);
+            // This is a list tag
+            return parseTag(new ListTag(name));
         }
-
-        return parseValueTag(name, valueString);
-    }
-
-    static Pattern byteTagValuePattern = Pattern.compile("[-+]?\\d+[bB]");
-    static Pattern doubleTagValuePattern = Pattern.compile("[-+]?((\\d+(\\.\\d*)?)|(\\.\\d+))[dD]");
-    static Pattern floatTagValuePattern = Pattern.compile("[-+]?((\\d+(\\.\\d*)?)|(\\.\\d+))[fF]");
-    static Pattern intTagValuePattern = Pattern.compile("[-+]?\\d+");
-    static Pattern longTagValuePattern = Pattern.compile("[-+]?\\d+[lL]");
-    static Pattern shortTagValuePattern = Pattern.compile("[-+]?\\d+[sS]");
-
-    private static Tag parseValueTag(String name, String stringifiedValue) throws IOException {
-        if(byteTagValuePattern.matcher(stringifiedValue).matches()) {
-            // Byte
-            return parseValueTag(new ByteTag(name), stringifiedValue);
-        } else if(doubleTagValuePattern.matcher(stringifiedValue).matches()) {
-            // Double
-            return parseValueTag(new DoubleTag(name), stringifiedValue);
-        } else if(floatTagValuePattern.matcher(stringifiedValue).matches()) {
-            // Float
-            return parseValueTag(new FloatTag(name), stringifiedValue);
-        } else if(intTagValuePattern.matcher(stringifiedValue).matches()) {
-            // Integer
-            return parseValueTag(new IntTag(name), stringifiedValue);
-        } else if(longTagValuePattern.matcher(stringifiedValue).matches()) {
-            // Long
-            return parseValueTag(new LongTag(name), stringifiedValue);
-        } else if(shortTagValuePattern.matcher(stringifiedValue).matches()) {
-            // Short
-            return parseValueTag(new ShortTag(name), stringifiedValue);
-        } else {
-            // String
-            return parseValueTag(new StringTag(name), stringifiedValue);
+        
+        private Tag readPrimitiveTag(String name) throws IOException {
+            String valueString = readNextSingleValueString();
+            unread(valueString.toCharArray());
+            return parseTag(getTagForStringifiedValue(name, valueString));
         }
-    }
-
-    private static Tag parseValueTag(Tag tag, String valueString) throws IOException {
-        StringifyableValueTag stag = (StringifyableValueTag) tag;
-        stag.destringify(valueString);
-        return tag;
-    }
-
-    private static void skipWhitespace(PushbackReader in) throws IOException {
-        char c;
-        while((c = (char) in.read()) != -1) {
-            if(c == '\t' || c == '\r' || c == '\n' || c == ' ') {
-                continue;
+        
+        public String readNextSingleValueString() throws IOException {
+            String valueString;
+            if(lookAhead(1) == '\'' || lookAhead(1) == '\"') {
+                char c = (char) read();
+                valueString = c + readUntil(true, c);
             } else {
-                in.unread(c);
-                return;
+                valueString = readUntil(false, ',', '}', ']', '\r', '\n', '\t');
+            }
+            return valueString;
+        }
+
+        static final Pattern byteTagValuePattern = Pattern.compile("[-+]?\\d+[bB]");
+        static final Pattern doubleTagValuePattern = Pattern.compile("[-+]?((\\d+(\\.\\d*)?)|(\\.\\d+))[dD]");
+        static final Pattern floatTagValuePattern = Pattern.compile("[-+]?((\\d+(\\.\\d*)?)|(\\.\\d+))[fF]");
+        static final Pattern intTagValuePattern = Pattern.compile("[-+]?\\d+");
+        static final Pattern longTagValuePattern = Pattern.compile("[-+]?\\d+[lL]");
+        static final Pattern shortTagValuePattern = Pattern.compile("[-+]?\\d+[sS]");
+        
+        private Tag getTagForStringifiedValue(String name, String stringifiedValue) {
+            if(byteTagValuePattern.matcher(stringifiedValue).matches()) {
+                // Byte
+                return new ByteTag(name);
+            } else if(doubleTagValuePattern.matcher(stringifiedValue).matches()) {
+                // Double
+                return new DoubleTag(name);
+            } else if(floatTagValuePattern.matcher(stringifiedValue).matches()) {
+                // Float
+                return new FloatTag(name);
+            } else if(intTagValuePattern.matcher(stringifiedValue).matches()) {
+                // Integer
+                return new IntTag(name);
+            } else if(longTagValuePattern.matcher(stringifiedValue).matches()) {
+                // Long
+                return new LongTag(name);
+            } else if(shortTagValuePattern.matcher(stringifiedValue).matches()) {
+                // Short
+                return new ShortTag(name);
+            }
+            // String
+            return new StringTag(name);
+        }
+
+        public Tag parseTag(Tag tag) throws IOException {
+            tag.destringify(this);
+            return tag;
+        }
+
+        public void skipWhitespace() throws IOException {
+            char c;
+            while((c = (char) read()) != -1) {
+                if(c == '\t' || c == '\r' || c == '\n' || c == ' ') {
+                    continue;
+                } else {
+                    unread(c);
+                    return;
+                }
             }
         }
-    }
 
-    private static char readSkipWhitespace(PushbackReader in) throws IOException {
-        skipWhitespace(in);
-        return (char) in.read();
-    }
+        public char readSkipWhitespace() throws IOException {
+            skipWhitespace();
+            return (char) read();
+        }
 
-    private static String readStringUntil(Reader in, boolean includeEndChar, char... endChar) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        boolean escapeEnd = false;
-        char c;
-        while((c = (char) in.read()) != -1) {
-            if(c == '\\') {
-                sb.append(c);
-                escapeEnd = true;
-                continue;
-            }
-            if(!escapeEnd && matchesAny(c, endChar)) {
-                if(includeEndChar)
+        public String readUntil(boolean includeEndChar, char... endChar) throws IOException {
+            StringBuilder sb = new StringBuilder();
+            boolean escapeEnd = false;
+            char c;
+            while((c = (char) read()) != -1) {
+                if(c == '\\') {
                     sb.append(c);
-                break;
+                    escapeEnd = true;
+                    continue;
+                }
+                if(!escapeEnd && matchesAny(c, endChar)) {
+                    if(includeEndChar) {
+                        sb.append(c);
+                    } else {
+                        unread(c);
+                    }
+                    break;
+                }
+                sb.append(c);
+                escapeEnd = false;
             }
-            sb.append(c);
-            escapeEnd = false;
+            return sb.toString();
         }
-        return sb.toString();
-    }
 
-    private static char lookAhead(PushbackReader in, int offset) throws IOException {
-        char[] future = new char[offset];
-        in.read(future);
-        in.unread(future);
-        return future[offset - 1];
-    }
-
-    private static boolean matchesAny(char c, char[] matchable) {
-        for(char m : matchable) {
-            if(c == m)
-                return true;
+        public char lookAhead(int offset) throws IOException {
+            char[] future = new char[offset];
+            read(future);
+            unread(future);
+            return future[offset - 1];
         }
-        return false;
+
+        public static boolean matchesAny(char c, char[] matchable) {
+            for(char m : matchable) {
+                if(c == m)
+                    return true;
+            }
+            return false;
+        }
     }
 
     private static void indent(OutputStreamWriter out, int depth) throws IOException {
