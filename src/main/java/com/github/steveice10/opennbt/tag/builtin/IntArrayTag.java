@@ -105,12 +105,13 @@ public class IntArrayTag extends Tag implements StringifyableValueTag {
 
     @Override
     public void stringify(OutputStreamWriter out) throws IOException {
-        StringBuilder sb = new StringBuilder("[I;");
+        StringBuilder sb = new StringBuilder("[I; ");
         for(int b : value) {
             sb.append(b);
             sb.append(',');
+            sb.append(' ');
         }
-        sb.setLength(sb.length() - 1);
+        sb.setLength(sb.length() - 2);
         sb.append(']');
         out.append(sb.toString());
     }

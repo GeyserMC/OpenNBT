@@ -108,12 +108,13 @@ public class DoubleArrayTag extends Tag implements StringifyableValueTag {
 
     @Override
     public void stringify(OutputStreamWriter out) throws IOException {
-        StringBuilder sb = new StringBuilder("[D;");
+        StringBuilder sb = new StringBuilder("[D; ");
         for(double b : value) {
             sb.append(b);
             sb.append(',');
+            sb.append(' ');
         }
-        sb.setLength(sb.length() - 1);
+        sb.setLength(sb.length() - 2);
         sb.append(']');
         out.append(sb.toString());
     }
