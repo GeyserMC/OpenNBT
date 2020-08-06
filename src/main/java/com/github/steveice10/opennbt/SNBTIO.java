@@ -165,9 +165,9 @@ public class SNBTIO {
 
         public Tag readNextTag(String name) throws IOException {
             skipWhitespace();
-            if(lookAhead(1) == '{') {
+            if(lookAhead(0) == '{') {
                 return readCompoundTag(name);
-            } else if(lookAhead(1) == '[') {
+            } else if(lookAhead(0) == '[') {
                 return readListOrArrayTag(name);
             } else {
                 return readPrimitiveTag(name);
@@ -179,15 +179,8 @@ public class SNBTIO {
         }
 
         private Tag readListOrArrayTag(String name) throws IOException {
-            readSkipWhitespace();
-            char idChar = readSkipWhitespace();
-            char separatorChar = readSkipWhitespace();
-            unread(separatorChar);
-            unread(idChar);
-
-            if(separatorChar == ';') {
-                unread('[');
-                switch(idChar) {
+            if(lookAhead(2) == ';') {
+                switch(lookAhead(1)) {
                 case 'B':
                     // Byte array
                     return parseTag(new ByteArrayTag(name));
@@ -224,7 +217,7 @@ public class SNBTIO {
 
         public String readNextSingleValueString() throws IOException {
             String valueString;
-            if(lookAhead(1) == '\'' || lookAhead(1) == '\"') {
+            if(lookAhead(0) == '\'' || lookAhead(0) == '\"') {
                 char c = (char) read();
                 valueString = c + readUntil(true, c);
             } else {
@@ -311,10 +304,10 @@ public class SNBTIO {
         }
 
         public char lookAhead(int offset) throws IOException {
-            char[] future = new char[offset];
+            char[] future = new char[offset + 1];
             read(future);
             unread(future);
-            return future[offset - 1];
+            return future[offset];
         }
 
         public static boolean matchesAny(char c, char[] matchable) {
