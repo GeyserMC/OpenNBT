@@ -210,18 +210,23 @@ public class SNBTIO {
         }
 
         private Tag readPrimitiveTag(String name) throws IOException {
-            String valueString = readNextSingleValueString();
+            String valueString = readNextSingleValueString(32);
             unread(valueString.toCharArray());
             return parseTag(getTagForStringifiedValue(name, valueString));
         }
 
         public String readNextSingleValueString() throws IOException {
+            return readNextSingleValueString(Integer.MAX_VALUE);
+        }
+
+        // Used when expecting to unread to limit read to the length of the pushback buffer.
+        public String readNextSingleValueString(int maxReadLenght) throws IOException {
             String valueString;
             if(lookAhead(0) == '\'' || lookAhead(0) == '\"') {
                 char c = (char) read();
-                valueString = c + readUntil(true, c);
+                valueString = c + readUntil(maxReadLenght, true, c);
             } else {
-                valueString = readUntil(false, ',', '}', ']', '\r', '\n', '\t');
+                valueString = readUntil(maxReadLenght, false, ',', '}', ']', '\r', '\n', '\t');
             }
             return valueString;
         }
@@ -280,10 +285,16 @@ public class SNBTIO {
         }
 
         public String readUntil(boolean includeEndChar, char... endChar) throws IOException {
+            return readUntil(Integer.MAX_VALUE, includeEndChar, endChar);
+        }
+
+        // Used when expecting to unread to limit read to the length of the pushback buffer.
+        public String readUntil(int maxReadLenght, boolean includeEndChar, char... endChar) throws IOException {
             StringBuilder sb = new StringBuilder();
             boolean escapeEnd = false;
+            int reads = 0;
             char c;
-            while((c = (char) read()) != -1) {
+            while(++reads < maxReadLenght && (c = (char) read()) != -1) {
                 if(c == '\\') {
                     sb.append(c);
                     escapeEnd = true;
