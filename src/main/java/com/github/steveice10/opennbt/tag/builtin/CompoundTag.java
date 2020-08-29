@@ -1,7 +1,5 @@
 package com.github.steveice10.opennbt.tag.builtin;
 
-import com.github.steveice10.opennbt.NBTIO;
-
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.EOFException;
@@ -14,6 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import com.github.steveice10.opennbt.NBTIO;
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
+import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTWriter;
 
 /**
  * A compound tag containing other tags.
@@ -170,6 +172,52 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
         }
 
         out.writeByte(0);
+    }
+    
+    @Override
+    public void destringify(StringifiedNBTReader in) throws IOException {
+        in.readSkipWhitespace();
+        while(true) {
+            String tagName = "";
+            if((tagName += in.readSkipWhitespace()).equals("\"")) {
+                tagName = in.readUntil(false, '"');
+                in.read();
+            }
+            tagName += in.readUntil(false, ':');
+            in.read();
+
+            put(in.readNextTag(tagName));
+
+            char endChar = in.readSkipWhitespace();
+            if(endChar == ',')
+                continue;
+            if(endChar == '}')
+                break;
+        }
+    }
+    
+    @Override
+    public void stringify(StringifiedNBTWriter out, boolean linebreak, int depth) throws IOException {
+        out.append('{');
+        
+        boolean first = true;
+        for(Tag t: value.values()) {
+            if(first) {
+                first = false;
+            } else {
+                out.append(',');
+                if(!linebreak) {
+                    out.append(' ');
+                }
+            }
+            out.writeTag(t, linebreak, depth + 1);
+        }
+        
+        if(linebreak) {
+            out.append('\n');
+            out.indent(depth);
+        }
+        out.append('}');
     }
 
     @Override
