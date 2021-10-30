@@ -3,19 +3,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.steveice10</groupId>
+    <groupId>com.github.GeyserMC</groupId>
     <artifactId>opennbt</artifactId>
     <version>1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>OpenNBT</name>
     <description>A library for reading and writing NBT files, written in Java.</description>
-    <url>http://github.com/Steveice10/OpenNBT/</url>
+    <url>http://github.com/GeyserMC/OpenNBT/</url>
 
     <scm>
-        <connection>scm:git:git@github.com:Steveice10/OpenNBT.git</connection>
-        <developerConnection>scm:git:git@github.com:Steveice10/OpenNBT.git</developerConnection>
-        <url>http://github.com/Steveice10/OpenNBT/</url>
+        <connection>scm:git:git@github.com:GeyserMC/OpenNBT.git</connection>
+        <developerConnection>scm:git:git@github.com:GeyserMC/OpenNBT.git</developerConnection>
+        <url>http://github.com/GeyserMC/OpenNBT/</url>
     </scm>
 
     <properties>
@@ -34,15 +34,15 @@
 
     <developers>
         <developer>
-            <id>steveice10</id>
-            <name>Steveice10</name>
-            <email>Steveice10@gmail.com</email>
+            <id>GeyserMC</id>
+            <name>GeyserMC</name>
+            <url>https://geysermc.org/</url>
         </developer>
     </developers>
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/Steveice10/OpenNBT/issues</url>
+        <url>https://github.com/GeyserMC/OpenNBT/issues</url>
     </issueManagement>
 
     <build>
