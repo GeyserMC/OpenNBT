@@ -52,14 +52,14 @@ public class SNBTIO {
      * @throws java.io.IOException If an I/O error occurs.
      */
     public static CompoundTag readFile(File file) throws IOException {
-        InputStream in = new BufferedInputStream(new FileInputStream(file));
+        try (InputStream in = new BufferedInputStream(new FileInputStream(file))) {
+            Tag tag = readTag(in);
+            if (!(tag instanceof CompoundTag)) {
+                throw new IOException("Root tag is not a CompoundTag!");
+            }
 
-        Tag tag = readTag(in);
-        if(!(tag instanceof CompoundTag)) {
-            throw new IOException("Root tag is not a CompoundTag!");
+            return (CompoundTag) tag;
         }
-
-        return (CompoundTag) tag;
     }
 
     /**
@@ -113,10 +113,9 @@ public class SNBTIO {
             file.createNewFile();
         }
 
-        OutputStream out = new FileOutputStream(file);
-
-        writeTag(out, tag, linebreak);
-        out.close();
+        try (OutputStream out = new FileOutputStream(file)) {
+            writeTag(out, tag, linebreak);
+        }
     }
 
     /**
@@ -127,10 +126,9 @@ public class SNBTIO {
      * @throws java.io.IOException If an I/O error occurs.
      */
     public static Tag readTag(InputStream in) throws IOException {
-        StringifiedNBTReader reader = new StringifiedNBTReader(in);
-        Tag t = reader.readNextTag("");
-        reader.close();
-        return t;
+        try (StringifiedNBTReader reader = new StringifiedNBTReader(in)) {
+            return reader.readNextTag("");
+        }
     }
 
     /**
@@ -153,9 +151,9 @@ public class SNBTIO {
      * @throws java.io.IOException If an I/O error occurs.
      */
     public static void writeTag(OutputStream out, Tag tag, boolean linebreak) throws IOException {
-        StringifiedNBTWriter writer = new StringifiedNBTWriter(out);
-        writer.writeTag(tag, linebreak);
-        writer.close();
+        try (StringifiedNBTWriter writer = new StringifiedNBTWriter(out)) {
+            writer.writeTag(tag, linebreak);
+        }
     }
 
     public static class StringifiedNBTReader extends PushbackReader {

@@ -71,16 +71,20 @@ public class NBTIO {
      */
     public static CompoundTag readFile(File file, boolean compressed, boolean littleEndian) throws IOException {
         InputStream in = new FileInputStream(file);
-        if(compressed) {
-            in = new GZIPInputStream(in);
-        }
+        try {
+            if (compressed) {
+                in = new GZIPInputStream(in);
+            }
 
-        Tag tag = readTag(in, littleEndian);
-        if(!(tag instanceof CompoundTag)) {
-            throw new IOException("Root tag is not a CompoundTag!");
-        }
+            Tag tag = readTag(in, littleEndian);
+            if (!(tag instanceof CompoundTag)) {
+                throw new IOException("Root tag is not a CompoundTag!");
+            }
 
-        return (CompoundTag) tag;
+            return (CompoundTag) tag;
+        } finally {
+            in.close();
+        }
     }
 
     /**
@@ -137,12 +141,15 @@ public class NBTIO {
         }
 
         OutputStream out = new FileOutputStream(file);
-        if(compressed) {
-            out = new GZIPOutputStream(out);
-        }
+        try {
+            if (compressed) {
+                out = new GZIPOutputStream(out);
+            }
 
-        writeTag(out, tag, littleEndian);
-        out.close();
+            writeTag(out, tag, littleEndian);
+        } finally {
+            out.close();
+        }
     }
 
     /**
