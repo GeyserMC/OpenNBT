@@ -202,6 +202,54 @@ public class NBTIO {
     }
 
     /**
+     * Reads a big endian NBT tag.
+     *
+     * @param in Input stream to read from.
+     * @return The read tag, or null if the tag is an end tag.
+     * @throws java.io.IOException If an I/O error occurs.
+     */
+    public static Tag readAnyTag(InputStream in) throws IOException {
+        return readAnyTag(in, false);
+    }
+
+    /**
+     * Reads an NBT tag.
+     *
+     * @param in           Input stream to read from.
+     * @param littleEndian Whether to read little endian NBT.
+     * @return The read tag, or null if the tag is an end tag.
+     * @throws java.io.IOException If an I/O error occurs.
+     */
+    public static Tag readAnyTag(InputStream in, boolean littleEndian) throws IOException {
+        return readAnyTag((DataInput) (littleEndian ? new LittleEndianDataInputStream(in) : new DataInputStream(in)));
+    }
+
+    /**
+     * Reads an NBT tag.
+     *
+     * @param in Data input to read from.
+     * @return The read tag, or null if the tag is an end tag.
+     * @throws java.io.IOException If an I/O error occurs.
+     */
+    public static Tag readAnyTag(DataInput in) throws IOException {
+        int id = in.readUnsignedByte();
+        if(id == 0) {
+            return null;
+        }
+
+        Tag tag;
+
+        try {
+            tag = TagRegistry.createInstance(id, "");
+        } catch(TagCreateException e) {
+            throw new IOException("Failed to create tag.", e);
+        }
+
+        tag.read(in);
+        return tag;
+    }
+
+    /**
      * Writes an NBT tag in big endian.
      *
      * @param out Output stream to write to.
@@ -235,6 +283,38 @@ public class NBTIO {
         if(tag != null) {
             out.writeByte(TagRegistry.getIdFor(tag.getClass()));
             out.writeUTF(tag.getName());
+            tag.write(out);
+        } else {
+            out.writeByte(0);
+        }
+    }
+
+    /**
+     * Writes an NBT tag in big endian.
+     *
+     * @param out Output stream to write to.
+     * @param tag Tag to write.
+     * @throws java.io.IOException If an I/O error occurs.
+     */
+    public static void writeAnyTag(OutputStream out, Tag tag) throws IOException {
+        writeAnyTag(out, tag, false);
+    }
+
+    /**
+     * Writes an NBT tag.
+     *
+     * @param out          Output stream to write to.
+     * @param tag          Tag to write.
+     * @param littleEndian Whether to write little endian NBT.
+     * @throws java.io.IOException If an I/O error occurs.
+     */
+    public static void writeAnyTag(OutputStream out, Tag tag, boolean littleEndian) throws IOException {
+        writeAnyTag((DataOutput) (littleEndian ? new LittleEndianDataOutputStream(out) : new DataOutputStream(out)), tag);
+    }
+
+    public static void writeAnyTag(DataOutput out, Tag tag) throws IOException {
+        if (tag != null) {
+            out.writeByte(TagRegistry.getIdFor(tag.getClass()));
             tag.write(out);
         } else {
             out.writeByte(0);
