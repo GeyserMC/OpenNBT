@@ -3,6 +3,7 @@ package com.github.steveice10.opennbt.tag.builtin.custom;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTReader;
 import com.github.steveice10.opennbt.SNBTIO.StringifiedNBTWriter;
@@ -110,8 +111,9 @@ public class FloatArrayTag extends Tag {
     @Override
     public void stringify(StringifiedNBTWriter out, boolean linebreak, int depth) throws IOException {
         StringBuilder sb = new StringBuilder("[F; ");
+        DecimalFormat df = new DecimalFormat("#.#");
         for(float b : value) {
-            sb.append(b);
+            sb.append(df.format(b));
             sb.append(',');
             sb.append(' ');
         }
