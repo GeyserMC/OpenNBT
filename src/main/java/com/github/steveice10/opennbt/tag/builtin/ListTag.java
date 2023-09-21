@@ -194,6 +194,14 @@ public class ListTag extends Tag implements Iterable<Tag> {
     @Override
     public void destringify(StringifiedNBTReader in) throws IOException {
         in.readSkipWhitespace();
+        
+        //Check for empty list
+        in.skipWhitespace();
+        if(in.lookAhead(0) == ']') {
+            in.read();
+            return;
+        }
+        
         while(true) {
             add(in.readNextTag(""));
 

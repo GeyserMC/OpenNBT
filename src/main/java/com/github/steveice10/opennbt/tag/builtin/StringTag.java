@@ -60,7 +60,9 @@ public class StringTag extends Tag {
     @Override
     public void destringify(StringifiedNBTReader in) throws IOException {
         String s = in.readNextSingleValueString();
-        if(s.charAt(0) == '"') {
+        if(s.length() == 0) {
+            value = s;
+        } else if(s.charAt(0) == '"') {
             value = s.substring(1, s.length() - 1).replaceAll("\\\\\"", "\"");
         } else if(s.charAt(0) == '\'') {
             value = s.substring(1, s.length() - 1).replaceAll("\\\\\'", "'");

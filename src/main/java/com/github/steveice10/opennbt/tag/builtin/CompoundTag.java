@@ -177,6 +177,14 @@ public class CompoundTag extends Tag implements Iterable<Tag> {
     @Override
     public void destringify(StringifiedNBTReader in) throws IOException {
         in.readSkipWhitespace();
+        
+        //Check for empty compound
+        in.skipWhitespace();
+        if(in.lookAhead(0) == '}') {
+            in.read();
+            return;
+        }
+        
         while(true) {
             String tagName = "";
             if((tagName += in.readSkipWhitespace()).equals("\"")) {
